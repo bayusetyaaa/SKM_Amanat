@@ -74,13 +74,15 @@ require __DIR__ . '/../vendor/autoload.php';
 /** @var Application $app */
 $app = require_once __DIR__ . '/../bootstrap/app.php';
 
-// Auto-migrate & seed SQLite on first container boot if new
-if ($isNewDb && $dbConn === 'sqlite') {
-    try {
+// Auto-migrate & seed on first container boot if tables do not exist
+try {
+    if ($dbConn === 'sqlite' && $isNewDb) {
         Artisan::call('migrate --force --seed');
-    } catch (\Throwable $e) {
-        error_log('Migration notice: ' . $e->getMessage());
+    } elseif ($dbConn !== 'sqlite' && !\Illuminate\Support\Facades\Schema::hasTable('users')) {
+        Artisan::call('migrate --force --seed');
     }
+} catch (\Throwable $e) {
+    error_log('Database init notice: ' . $e->getMessage());
 }
 
 $app->handleRequest(Request::capture());
