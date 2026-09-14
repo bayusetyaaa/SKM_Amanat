@@ -1,0 +1,58 @@
+{
+  "menu": [
+    {
+      "menuHeader": "Menu Cakruma"
+    },
+    {
+      "name": "Beranda",
+      "icon": "menu-icon tf-icons bx bx-home-circle",
+      "slug": "member.dashboard",
+      "url": "/member/dashboard"
+    },
+    {
+      "name": "Profil & Berkas",
+      "icon": "menu-icon tf-icons bx bx-id-card",
+      "slug": "member.profil",
+      "url": "/member/profil"
+    },
+    {
+      "name": "Penugasan",
+      "icon": "menu-icon tf-icons bx bx-task",
+      "slug": "member.penugasan",
+      "url": "/member/penugasan"
+    },
+    {
+      "name": "Presensi Kegiatan",
+      "icon": "menu-icon tf-icons bx bx-calendar-check",
+      "slug": "member.presensi",
+      "url": "/member/presensi"
+    },
+    {
+      "name": "Magang Spesialis",
+      "icon": "menu-icon tf-icons bx bx-briefcase",
+      "slug": "member.magang-spesialis",
+      "url": "/member/magang-spesialis"
+    },
+    {
+      "name": "Hasil Rekomendasi",
+      "icon": "menu-icon tf-icons bx bx-award",
+      "slug": "member.hasil-rekomendasi",
+      "url": "/member/hasil-rekomendasi"
+    },
+    {
+      "menuHeader": "Informasi"
+    },
+    {
+      "name": "Pengumuman",
+      "icon": "menu-icon tf-icons bx bx-bell",
+      "slug": "member.pengumuman",
+      "url": "/member/pengumuman"
+    },
+    {
+      "name": "Info Pendaftaran",
+      "icon": "menu-icon tf-icons bx bx-info-circle",
+      "slug": "member.info-pendaftaran",
+      "url": "/member/info-pendaftaran"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+<?php
+// Variables
+return [
+  "creatorName" => "SKM Amanat",
+  "creatorUrl" => "https://amanat.id",
+  "templateName" => "SKM Amanat",
+  "templateSuffix" => "Sistem Informasi Keanggotaan & Magang Spesialis",
+  "templateVersion" => "1.0.0",
+  "templateFree" => true,
+  "templateDescription" => "Sistem Pendukung Keputusan Seleksi Keanggotaan dan Penempatan Magang Spesialis SKM Amanat",
+  "templateKeyword" => "skm amanat, profile matching, keanggotaan, magang spesialis",
+  "licenseUrl" => "",
+  "livePreview" => "",
+  "productPage" => "",
+  "support" => "",
+  "adminTemplates" => "",
+  "bootstrapDashboard" => "",
+  "ogTitle" => "SKM Amanat - Sistem Informasi Keanggotaan",
+  "ogImage" => "",
+  "ogType" => "article",
+  "documentation" => "",
+  "repository" => "",
+  "gitRepo" => "",
+  "gitRepoAccess" => "",
+  "githubFreeUrl" => "",
+  "facebookUrl" => "",
+  "twitterUrl" => "",
+  "githubUrl" => "",
+  "dribbbleUrl" => "",
+  "instagramUrl" => ""
+];

@@ -1,0 +1,67 @@
+{
+  "menu": [
+    {
+      "menuHeader": "Menu Utama"
+    },
+    {
+      "name": "Dashboard",
+      "icon": "menu-icon tf-icons bx bx-home-circle",
+      "slug": "admin.dashboard",
+      "url": "/admin/dashboard"
+    },
+    {
+      "name": "Data Calon Anggota",
+      "icon": "menu-icon tf-icons bx bx-user-check",
+      "slug": "admin.calon-anggota",
+      "url": "/admin/calon-anggota"
+    },
+    {
+      "name": "Magang Spesialis",
+      "icon": "menu-icon tf-icons bx bx-briefcase",
+      "slug": "admin.mapping-spesialis",
+      "url": "/admin/mapping-spesialis"
+    },
+    {
+      "name": "Kegiatan & Presensi",
+      "icon": "menu-icon tf-icons bx bx-calendar",
+      "slug": "admin.kegiatan",
+      "url": "/admin/kegiatan"
+    },
+    {
+      "name": "Penugasan Cakruma",
+      "icon": "menu-icon tf-icons bx bx-task",
+      "slug": "admin.penugasan",
+      "url": "/admin/penugasan"
+    },
+    {
+      "menuHeader": "SPK Profile Matching"
+    },
+    {
+      "name": "Konfigurasi Kriteria",
+      "icon": "menu-icon tf-icons bx bx-cog",
+      "slug": "admin.konfigurasi-kriteria",
+      "url": "/admin/konfigurasi-kriteria"
+    },
+    {
+      "name": "Nilai Evaluasi",
+      "icon": "menu-icon tf-icons bx bx-edit",
+      "slug": "admin.input-nilai",
+      "url": "/admin/input-nilai"
+    },
+    {
+      "name": "Hasil Rekomendasi",
+      "icon": "menu-icon tf-icons bx bx-trophy",
+      "slug": "admin.hasil-rekomendasi",
+      "url": "/admin/hasil-rekomendasi"
+    },
+    {
+      "menuHeader": "Informasi & Publikasi"
+    },
+    {
+      "name": "Kelola Pengumuman",
+      "icon": "menu-icon tf-icons bx bx-bell",
+      "slug": "admin.pengumuman",
+      "url": "/admin/pengumuman"
+    }
+  ]
+}
