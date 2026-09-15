@@ -24,7 +24,13 @@ foreach ($dirs as $dir) {
     }
 }
 
-// 2. Set default serverless environment variables
+// 2. Normalize HTTPS environment for reverse proxy (Vercel)
+if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+    $_SERVER['HTTPS'] = 'on';
+    $_SERVER['SERVER_PORT'] = '443';
+}
+
+// 3. Set default serverless environment variables
 putenv('APP_MAINTENANCE_DRIVER=file');
 $_ENV['APP_MAINTENANCE_DRIVER'] = 'file';
 $_SERVER['APP_MAINTENANCE_DRIVER'] = 'file';
@@ -61,7 +67,16 @@ putenv('APP_EVENTS_CACHE=/tmp/storage/bootstrap-cache/events.php');
 $_ENV['APP_EVENTS_CACHE'] = '/tmp/storage/bootstrap-cache/events.php';
 $_SERVER['APP_EVENTS_CACHE'] = '/tmp/storage/bootstrap-cache/events.php';
 
-// 3. Fallback APP_KEY if not configured in Vercel Environment Variables
+// 4. Force cookie-based session for serverless (no shared filesystem between instances)
+putenv('SESSION_DRIVER=cookie');
+$_ENV['SESSION_DRIVER'] = 'cookie';
+$_SERVER['SESSION_DRIVER'] = 'cookie';
+
+putenv('SESSION_SECURE_COOKIE=true');
+$_ENV['SESSION_SECURE_COOKIE'] = 'true';
+$_SERVER['SESSION_SECURE_COOKIE'] = 'true';
+
+// 5. Fallback APP_KEY if not configured in Vercel Environment Variables
 if (empty(getenv('APP_KEY')) && empty($_ENV['APP_KEY'])) {
     $defaultKey = 'base64:1rkA81Dy9XJzbiEvt7Vrdl9FJQVFBOJv7NijxdA+5fc=';
     putenv('APP_KEY=' . $defaultKey);
@@ -69,7 +84,7 @@ if (empty(getenv('APP_KEY')) && empty($_ENV['APP_KEY'])) {
     $_SERVER['APP_KEY'] = $defaultKey;
 }
 
-// 4. Bootstrap Laravel
+// 6. Bootstrap Laravel
 define('LARAVEL_START', microtime(true));
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -77,6 +92,34 @@ require __DIR__ . '/../vendor/autoload.php';
 try {
     /** @var Application $app */
     $app = require_once __DIR__ . '/../bootstrap/app.php';
+
+    // 7. Run migrations if DB is configured (pgsql)
+    $dbConnection = getenv('DB_CONNECTION') ?: ($_ENV['DB_CONNECTION'] ?? 'sqlite');
+    $dbHost = getenv('DB_HOST') ?: ($_ENV['DB_HOST'] ?? '');
+
+    if ($dbConnection === 'pgsql' && !empty($dbHost)) {
+        // Use a lock file in /tmp to avoid running migrations on every request
+        $migrationLockFile = '/tmp/storage/migrations_ran.lock';
+        if (!file_exists($migrationLockFile)) {
+            try {
+                $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+                // Always run migrations (safe, idempotent)
+                $kernel->call('migrate', ['--force' => true]);
+                // Only seed if users table is empty (avoid duplicate data)
+                $userCount = \Illuminate\Support\Facades\DB::table('users')->count();
+                if ($userCount === 0) {
+                    $kernel->call('db:seed', ['--force' => true, '--class' => 'DatabaseSeeder']);
+                }
+                file_put_contents($migrationLockFile, date('Y-m-d H:i:s') . ' - users:' . $userCount);
+            } catch (\Throwable $migrationError) {
+                // Log migration error but don't stop the app
+                error_log('Migration error: ' . $migrationError->getMessage());
+                // Still create the lock file to prevent infinite retries on error
+                file_put_contents($migrationLockFile, 'error: ' . $migrationError->getMessage());
+            }
+        }
+    }
+
     $app->handleRequest(Request::capture());
 } catch (\Throwable $e) {
     http_response_code(500);
