@@ -29,7 +29,7 @@ class DashboardController extends Controller
             ->count();
 
         // Rekomendasi Redaksi & Konten (HANYA dari anggota yang LOLOS seluruh tahapan seleksi)
-        $countRedaksi = HasilProfileMatching::where('rekomendasi', true)
+        $countRedaksi = HasilProfileMatching::rekomendasi()
             ->whereHas('divisi', function ($q) {
                 $q->where('nama', 'Redaksi');
             })
@@ -46,7 +46,7 @@ class DashboardController extends Controller
             })
             ->count();
 
-        $countKonten = HasilProfileMatching::where('rekomendasi', true)
+        $countKonten = HasilProfileMatching::rekomendasi()
             ->whereHas('divisi', function ($q) {
                 $q->where('nama', 'Konten');
             })
@@ -62,6 +62,7 @@ class DashboardController extends Controller
                    });
             })
             ->count();
+
 
         $cakrumaTerbaru = User::where('role', 'calon_anggota')
             ->with(['profil', 'berkas', 'hasilProfileMatching.divisi'])

@@ -28,6 +28,24 @@ class HasilProfileMatching extends Model
         'rekomendasi' => 'boolean',
     ];
 
+    /**
+     * Scope untuk filter rekomendasi = true.
+     * Menggunakan whereRaw agar kompatibel dengan PostgreSQL
+     * (PDO mengirim boolean PHP sebagai integer 1/0 yang ditolak PostgreSQL).
+     */
+    public function scopeRekomendasi($query)
+    {
+        return $query->whereRaw('"rekomendasi" = true');
+    }
+
+    /**
+     * Scope untuk filter rekomendasi = false.
+     */
+    public function scopeTidakRekomendasi($query)
+    {
+        return $query->whereRaw('"rekomendasi" = false');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

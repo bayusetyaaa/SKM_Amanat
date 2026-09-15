@@ -45,7 +45,7 @@ class DashboardController extends Controller
         // Hasil rekomendasi jika ada
         $hasilRekomendasi = HasilProfileMatching::with('divisi')
             ->where('user_id', $user->id)
-            ->where('rekomendasi', true)
+            ->whereRaw('"rekomendasi" = true')
             ->first();
 
         return view('user.dashboard', compact(

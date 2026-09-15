@@ -42,7 +42,7 @@ class MagangSpesialisController extends Controller
                         $qp->whereNull('keputusan_final')
                            ->orWhereNotIn('keputusan_final', ['Redaksi', 'Konten']);
                     })->whereHas('hasilProfileMatching', function ($qpm) use ($akhir) {
-                        $qpm->where('rekomendasi', true)
+                        $qpm->whereRaw('"rekomendasi" = true')
                             ->whereHas('divisi', function ($qd) use ($akhir) {
                                 $qd->where('nama', $akhir);
                             });

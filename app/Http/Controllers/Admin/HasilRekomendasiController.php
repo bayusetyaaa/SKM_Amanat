@@ -24,7 +24,7 @@ class HasilRekomendasiController extends Controller
             });
         } else {
             // Default hanya tampilkan baris rekomendasi divisi terbaik per user
-            $query->where('rekomendasi', true);
+            $query->whereRaw('"rekomendasi" = true');
         }
 
         $hasilRankings = $query->orderByDesc('nilai_total')->get();
@@ -74,7 +74,7 @@ class HasilRekomendasiController extends Controller
     {
         $divisis = Divisi::all();
         $hasilRankings = HasilProfileMatching::with(['user.profil', 'divisi'])
-            ->where('rekomendasi', true)
+            ->whereRaw('"rekomendasi" = true')
             ->orderByDesc('nilai_total')
             ->get();
 
