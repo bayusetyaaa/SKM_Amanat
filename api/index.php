@@ -48,41 +48,21 @@ if (empty(getenv('APP_KEY')) && empty($_ENV['APP_KEY'])) {
     $_SERVER['APP_KEY'] = $defaultKey;
 }
 
-// 4. Fallback SQLite database in /tmp if external MySQL is not yet configured
-$dbConn = getenv('DB_CONNECTION') ?: ($_ENV['DB_CONNECTION'] ?? 'sqlite');
-$isNewDb = false;
-
-if ($dbConn === 'sqlite') {
-    $dbPath = '/tmp/database.sqlite';
-    if (!file_exists($dbPath) || filesize($dbPath) === 0) {
-        @touch($dbPath);
-        $isNewDb = true;
-    }
-    putenv('DB_CONNECTION=sqlite');
-    putenv('DB_DATABASE=' . $dbPath);
-    $_ENV['DB_CONNECTION'] = 'sqlite';
-    $_ENV['DB_DATABASE'] = $dbPath;
-    $_SERVER['DB_CONNECTION'] = 'sqlite';
-    $_SERVER['DB_DATABASE'] = $dbPath;
-}
-
-// 5. Bootstrap Laravel
+// 4. Bootstrap Laravel
 define('LARAVEL_START', microtime(true));
 
 require __DIR__ . '/../vendor/autoload.php';
 
-/** @var Application $app */
-$app = require_once __DIR__ . '/../bootstrap/app.php';
-
-// Auto-migrate & seed on first container boot if tables do not exist
 try {
-    if ($dbConn === 'sqlite' && $isNewDb) {
-        Artisan::call('migrate --force --seed');
-    } elseif ($dbConn !== 'sqlite' && !\Illuminate\Support\Facades\Schema::hasTable('users')) {
-        Artisan::call('migrate --force --seed');
-    }
+    /** @var Application $app */
+    $app = require_once __DIR__ . '/../bootstrap/app.php';
+    $app->handleRequest(Request::capture());
 } catch (\Throwable $e) {
-    error_log('Database init notice: ' . $e->getMessage());
+    http_response_code(500);
+    echo "<div style='font-family:sans-serif;padding:30px;max-width:800px;margin:auto;'>";
+    echo "<h2 style='color:#e11d48;'>Application Server Error (500)</h2>";
+    echo "<p style='font-size:16px;'><strong>Pesan:</strong> " . htmlspecialchars($e->getMessage()) . "</p>";
+    echo "<p style='color:#64748b;'><strong>Lokasi:</strong> " . htmlspecialchars($e->getFile()) . " baris " . $e->getLine() . "</p>";
+    echo "<details><summary style='cursor:pointer;'>Detail Stack Trace</summary><pre style='background:#f1f5f9;padding:15px;border-radius:6px;overflow:auto;'>" . htmlspecialchars($e->getTraceAsString()) . "</pre></details>";
+    echo "</div>";
 }
-
-$app->handleRequest(Request::capture());

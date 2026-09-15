@@ -21,10 +21,12 @@ $app = Application::configure(basePath: dirname(__DIR__))
     })->create();
 
 // On Vercel / Serverless environments, redirect storage to writable /tmp
-if (env('LARAVEL_STORAGE_PATH')) {
-    $app->useStoragePath(env('LARAVEL_STORAGE_PATH'));
-} elseif (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL']) || (PHP_OS_FAMILY !== 'Windows' && file_exists('/tmp'))) {
-    $app->useStoragePath('/tmp/storage');
+$storagePath = getenv('LARAVEL_STORAGE_PATH') ?: ($_ENV['LARAVEL_STORAGE_PATH'] ?? null);
+if (!$storagePath && (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL']) || (PHP_OS_FAMILY !== 'Windows' && is_dir('/tmp')))) {
+    $storagePath = '/tmp/storage';
+}
+if ($storagePath) {
+    $app->useStoragePath($storagePath);
 }
 
 return $app;
