@@ -27,6 +27,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Mute model event listeners during seed to prevent recursive recalculations
+        Kegiatan::flushEventListeners();
+        Penugasan::flushEventListeners();
+        PengumpulanTugas::flushEventListeners();
+        Presensi::flushEventListeners();
+
         // 1. Akun Admin / Pengurus
         $admin = User::create([
             'name' => 'HRD SKM Amanat',
@@ -239,6 +245,7 @@ class DatabaseSeeder extends Seeder
                 'role' => 'calon_anggota',
             ]);
 
+            $isLolos = ($cad['status'] ?? 'lolos') === 'lolos';
             ProfilCalonAnggota::create([
                 'user_id' => $user->id,
                 'nim' => $cad['nim'],
@@ -247,7 +254,9 @@ class DatabaseSeeder extends Seeder
                 'no_hp' => $cad['no_hp'],
                 'alamat' => $cad['alamat'],
                 'pilihan_divisi_awal' => $cad['pilihan'],
-                'status_seleksi' => $cad['status'],
+                'seleksi_administrasi' => $isLolos ? 'lolos' : 'tidak_lolos',
+                'tes_tulis_wawancara' => $isLolos ? 'lolos' : 'tidak_lolos',
+                'cakruma' => $isLolos ? 'lolos' : 'tidak_lolos',
                 'keputusan_final' => $cad['keputusan'],
             ]);
 
