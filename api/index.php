@@ -76,6 +76,10 @@ putenv('SESSION_SECURE_COOKIE=true');
 $_ENV['SESSION_SECURE_COOKIE'] = 'true';
 $_SERVER['SESSION_SECURE_COOKIE'] = 'true';
 
+putenv('SESSION_SAME_SITE=none');
+$_ENV['SESSION_SAME_SITE'] = 'none';
+$_SERVER['SESSION_SAME_SITE'] = 'none';
+
 // 5. Fallback APP_KEY if not configured in Vercel Environment Variables
 if (empty(getenv('APP_KEY')) && empty($_ENV['APP_KEY'])) {
     $defaultKey = 'base64:1rkA81Dy9XJzbiEvt7Vrdl9FJQVFBOJv7NijxdA+5fc=';
@@ -83,6 +87,11 @@ if (empty(getenv('APP_KEY')) && empty($_ENV['APP_KEY'])) {
     $_ENV['APP_KEY'] = $defaultKey;
     $_SERVER['APP_KEY'] = $defaultKey;
 }
+
+// Enable debug mode temporarily to see errors clearly
+putenv('APP_DEBUG=true');
+$_ENV['APP_DEBUG'] = 'true';
+$_SERVER['APP_DEBUG'] = 'true';
 
 // 6. Bootstrap Laravel
 define('LARAVEL_START', microtime(true));

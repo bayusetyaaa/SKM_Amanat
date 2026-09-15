@@ -38,12 +38,57 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+
+// Debug route (temporary - untuk diagnosa error di Vercel)
+Route::get('/debug-info', function () {
+    try {
+        $dbOk = false;
+        $dbError = null;
+        $tables = [];
+        try {
+            \Illuminate\Support\Facades\DB::connection()->getPdo();
+            $dbOk = true;
+            $tables = \Illuminate\Support\Facades\DB::select("SELECT tablename FROM pg_tables WHERE schemaname='public'");
+        } catch (\Throwable $e) {
+            $dbError = $e->getMessage();
+        }
+
+        return response()->json([
+            'status' => 'ok',
+            'php_version' => PHP_VERSION,
+            'laravel_version' => app()->version(),
+            'app_env' => config('app.env'),
+            'app_debug' => config('app.debug'),
+            'app_url' => config('app.url'),
+            'db_connection' => config('database.default'),
+            'db_host' => config('database.connections.pgsql.host'),
+            'db_port' => config('database.connections.pgsql.port'),
+            'db_database' => config('database.connections.pgsql.database'),
+            'db_username' => config('database.connections.pgsql.username'),
+            'db_connected' => $dbOk,
+            'db_error' => $dbError,
+            'tables' => array_column($tables, 'tablename'),
+            'session_driver' => config('session.driver'),
+            'session_secure' => config('session.secure'),
+            'session_same_site' => config('session.same_site'),
+            'storage_path' => storage_path(),
+            'view_path' => config('view.compiled'),
+            'tmp_writable' => is_writable('/tmp'),
+            'tmp_storage_exists' => is_dir('/tmp/storage'),
+            'migration_lock' => file_exists('/tmp/storage/migrations_ran.lock') ? file_get_contents('/tmp/storage/migrations_ran.lock') : 'NOT RUN',
+        ]);
+    } catch (\Throwable $e) {
+        return response()->json(['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()], 500);
+    }
+});
+
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 
 // Calon Anggota (Member) Routes
 Route::middleware(['auth', 'role:calon_anggota'])->prefix('member')->name('member.')->group(function () {
