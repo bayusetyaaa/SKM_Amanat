@@ -2,7 +2,10 @@
 .github
 node_modules
 tests
+public/index.php
+public/.htaccess
 storage/logs/*
 storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/views/*
+
