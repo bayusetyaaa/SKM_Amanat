@@ -34,35 +34,9 @@ class AuthController extends Controller
         $fieldType = filter_var($credentials['email'], FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
 
         if (Auth::attempt([$fieldType => $credentials['email'], 'password' => $credentials['password']], $request->filled('remember'))) {
-            $user = Auth::user();
-
-            // Cek apakah email sudah diverifikasi (khusus untuk calon_anggota)
-            if ($user->role === 'calon_anggota' && is_null($user->email_verified_at)) {
-                $userEmail = $user->email;
-                Auth::logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
-
-                // Buat OTP baru dan kirimkan ke email (berlaku 15 menit)
-                $otp = (string) rand(100000, 999999);
-                DB::table('password_reset_tokens')->updateOrInsert(
-                    ['email' => 'register_' . $userEmail],
-                    ['token' => $otp, 'created_at' => now()]
-                );
-
-                try {
-                    Mail::to($userEmail)->send(new \App\Mail\OtpVerificationMail($otp, 'register'));
-                } catch (\Exception $e) {
-                    // Abaikan error koneksi email jika env belum lengkap
-                }
-
-                return redirect()->route('verify-otp', ['email' => $userEmail])
-                    ->with('warning', 'Akun Anda belum diverifikasi. Kode OTP baru telah dikirimkan ke email Anda. Silakan verifikasi kode OTP untuk dapat masuk.');
-            }
-
             $request->session()->regenerate();
 
-            if ($user->role === 'admin') {
+            if (Auth::user()->role === 'admin') {
                 return redirect()->route('admin.dashboard');
             }
 
