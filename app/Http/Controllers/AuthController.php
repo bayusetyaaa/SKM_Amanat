@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\ProfilCalonAnggota;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -31,9 +34,35 @@ class AuthController extends Controller
         $fieldType = filter_var($credentials['email'], FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
 
         if (Auth::attempt([$fieldType => $credentials['email'], 'password' => $credentials['password']], $request->filled('remember'))) {
+            $user = Auth::user();
+
+            // Cek apakah email sudah diverifikasi (khusus untuk calon_anggota)
+            if ($user->role === 'calon_anggota' && is_null($user->email_verified_at)) {
+                $userEmail = $user->email;
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                // Buat OTP baru dan kirimkan ke email (berlaku 15 menit)
+                $otp = (string) rand(100000, 999999);
+                DB::table('password_reset_tokens')->updateOrInsert(
+                    ['email' => 'register_' . $userEmail],
+                    ['token' => $otp, 'created_at' => now()]
+                );
+
+                try {
+                    Mail::to($userEmail)->send(new \App\Mail\OtpVerificationMail($otp, 'register'));
+                } catch (\Exception $e) {
+                    // Abaikan error koneksi email jika env belum lengkap
+                }
+
+                return redirect()->route('verify-otp', ['email' => $userEmail])
+                    ->with('warning', 'Akun Anda belum diverifikasi. Kode OTP baru telah dikirimkan ke email Anda. Silakan verifikasi kode OTP untuk dapat masuk.');
+            }
+
             $request->session()->regenerate();
 
-            if (Auth::user()->role === 'admin') {
+            if ($user->role === 'admin') {
                 return redirect()->route('admin.dashboard');
             }
 
@@ -85,17 +114,20 @@ class AuthController extends Controller
             'cakruma' => null,
         ]);
 
-        // Generate OTP for registration
-        $otp = rand(100000, 999999);
-        \Illuminate\Support\Facades\Cache::put('register_otp_' . $user->email, $otp, now()->addMinutes(10));
+        // Simpan OTP ke database (berlaku 15 menit)
+        $otp = (string) rand(100000, 999999);
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => 'register_' . $user->email],
+            ['token' => $otp, 'created_at' => now()]
+        );
         
         try {
-            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\OtpVerificationMail($otp, 'register'));
+            Mail::to($user->email)->send(new \App\Mail\OtpVerificationMail($otp, 'register'));
         } catch (\Exception $e) {
             // Ignore mail errors in case of missing env configs
         }
 
-        return redirect()->route('verify-otp', ['email' => $user->email])->with('success', 'Pendaftaran akun berhasil! Silakan cek email Anda untuk mendapatkan kode OTP.');
+        return redirect()->route('verify-otp', ['email' => $user->email])->with('success', 'Pendaftaran akun berhasil! Silakan periksa kotak masuk atau spam email Anda untuk kode OTP.');
     }
 
     public function showVerifyOtp(Request $request)
@@ -110,24 +142,61 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email|exists:users,email',
-            'otp' => 'required|numeric',
+            'otp' => 'required|string',
         ]);
 
-        $cachedOtp = \Illuminate\Support\Facades\Cache::get('register_otp_' . $request->email);
+        $record = DB::table('password_reset_tokens')
+            ->where('email', 'register_' . $request->email)
+            ->first();
 
-        if (!$cachedOtp || $cachedOtp != $request->otp) {
-            return back()->withErrors(['otp' => 'Kode OTP tidak valid atau sudah kadaluarsa.'])->withInput();
+        if (!$record || trim((string)$record->token) !== trim((string)$request->otp)) {
+            return back()->withErrors(['otp' => 'Kode OTP tidak sesuai. Pastikan Anda memasukkan 6 digit angka yang benar.'])->withInput();
+        }
+
+        // Cek kadaluarsa OTP (15 menit)
+        if (Carbon::parse($record->created_at)->addMinutes(15)->isPast()) {
+            return back()->withErrors(['otp' => 'Kode OTP sudah kadaluarsa (berlaku 15 menit). Silakan klik tombol "Kirim Ulang Kode OTP".'])->withInput();
         }
 
         $user = User::where('email', $request->email)->first();
         $user->email_verified_at = now();
         $user->save();
 
-        \Illuminate\Support\Facades\Cache::forget('register_otp_' . $request->email);
+        // Hapus token yang sudah digunakan
+        DB::table('password_reset_tokens')
+            ->where('email', 'register_' . $request->email)
+            ->delete();
 
         Auth::login($user);
 
-        return redirect()->route('member.dashboard')->with('success', 'Email berhasil diverifikasi. Silakan lengkapi profil dan unggah berkas persyaratan Anda.');
+        return redirect()->route('member.dashboard')->with('success', 'Email berhasil diverifikasi! Selamat datang di SKM Amanat.');
+    }
+
+    public function resendVerifyOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if ($user->email_verified_at) {
+            return redirect()->route('login')->with('success', 'Akun Anda sudah terverifikasi sebelumnya. Silakan login.');
+        }
+
+        $otp = (string) rand(100000, 999999);
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => 'register_' . $user->email],
+            ['token' => $otp, 'created_at' => now()]
+        );
+
+        try {
+            Mail::to($user->email)->send(new \App\Mail\OtpVerificationMail($otp, 'register'));
+        } catch (\Exception $e) {
+            // Ignore
+        }
+
+        return back()->with('success', 'Kode OTP baru telah berhasil dikirimkan ke email Anda.');
     }
 
     public function showForgotPassword()
@@ -143,16 +212,40 @@ class AuthController extends Controller
             'email.exists' => 'Email tidak terdaftar dalam sistem.'
         ]);
 
-        $otp = rand(100000, 999999);
-        \Illuminate\Support\Facades\Cache::put('reset_otp_' . $request->email, $otp, now()->addMinutes(10));
+        $otp = (string) rand(100000, 999999);
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => 'reset_' . $request->email],
+            ['token' => $otp, 'created_at' => now()]
+        );
         
         try {
-            \Illuminate\Support\Facades\Mail::to($request->email)->send(new \App\Mail\OtpVerificationMail($otp, 'reset'));
+            Mail::to($request->email)->send(new \App\Mail\OtpVerificationMail($otp, 'reset'));
         } catch (\Exception $e) {
             // Ignore mail errors
         }
 
         return redirect()->route('reset-password', ['email' => $request->email])->with('success', 'Kode OTP reset sandi telah dikirim ke email Anda.');
+    }
+
+    public function resendResetOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email'
+        ]);
+
+        $otp = (string) rand(100000, 999999);
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => 'reset_' . $request->email],
+            ['token' => $otp, 'created_at' => now()]
+        );
+        
+        try {
+            Mail::to($request->email)->send(new \App\Mail\OtpVerificationMail($otp, 'reset'));
+        } catch (\Exception $e) {
+            // Ignore mail errors
+        }
+
+        return back()->with('success', 'Kode OTP reset sandi baru telah dikirim ke email Anda.');
     }
 
     public function showResetPassword(Request $request)
@@ -167,21 +260,32 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email|exists:users,email',
-            'otp' => 'required|numeric',
+            'otp' => 'required|string',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
-        $cachedOtp = \Illuminate\Support\Facades\Cache::get('reset_otp_' . $request->email);
+        $record = DB::table('password_reset_tokens')
+            ->where('email', 'reset_' . $request->email)
+            ->first();
 
-        if (!$cachedOtp || $cachedOtp != $request->otp) {
-            return back()->withErrors(['otp' => 'Kode OTP tidak valid atau sudah kadaluarsa.'])->withInput();
+        if (!$record || trim((string)$record->token) !== trim((string)$request->otp)) {
+            return back()->withErrors(['otp' => 'Kode OTP tidak sesuai. Silakan periksa kembali kode di email Anda.'])->withInput();
+        }
+
+        if (Carbon::parse($record->created_at)->addMinutes(15)->isPast()) {
+            return back()->withErrors(['otp' => 'Kode OTP reset sandi sudah kadaluarsa (berlaku 15 menit). Silakan kirim ulang kode.'])->withInput();
         }
 
         $user = User::where('email', $request->email)->first();
         $user->password = Hash::make($request->password);
+        if (is_null($user->email_verified_at)) {
+            $user->email_verified_at = now();
+        }
         $user->save();
 
-        \Illuminate\Support\Facades\Cache::forget('reset_otp_' . $request->email);
+        DB::table('password_reset_tokens')
+            ->where('email', 'reset_' . $request->email)
+            ->delete();
 
         return redirect()->route('login')->with('success', 'Kata sandi berhasil diatur ulang. Silakan login dengan kata sandi baru Anda.');
     }
@@ -195,3 +299,4 @@ class AuthController extends Controller
         return redirect()->route('login');
     }
 }
+

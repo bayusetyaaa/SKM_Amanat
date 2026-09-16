@@ -20,6 +20,17 @@ class RoleMiddleware
             return redirect()->route('login');
         }
 
+        // Calon anggota harus sudah verifikasi email OTP
+        if (auth()->user()->role === 'calon_anggota' && is_null(auth()->user()->email_verified_at)) {
+            $userEmail = auth()->user()->email;
+            auth()->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route('verify-otp', ['email' => $userEmail])
+                ->with('warning', 'Silakan selesaikan verifikasi kode OTP terlebih dahulu.');
+        }
+
         if (auth()->user()->role !== $role) {
             if (auth()->user()->role === 'admin') {
                 return redirect()->route('admin.dashboard');

@@ -91,8 +91,11 @@ Route::post('/register', [AuthController::class, 'register']);
 // OTP & Forgot Password Routes
 Route::get('/verify-otp', [AuthController::class, 'showVerifyOtp'])->name('verify-otp');
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
+Route::post('/resend-verify-otp', [AuthController::class, 'resendVerifyOtp'])->name('resend-verify-otp');
+
 Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('forgot-password');
 Route::post('/forgot-password', [AuthController::class, 'sendResetOtp']);
+Route::post('/resend-reset-otp', [AuthController::class, 'resendResetOtp'])->name('resend-reset-otp');
 Route::get('/reset-password', [AuthController::class, 'showResetPassword'])->name('reset-password');
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 

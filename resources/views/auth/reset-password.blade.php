@@ -52,6 +52,13 @@
                         </div>
                     @endif
 
+                    @if(session('warning'))
+                        <div class="alert alert-warning py-2 px-3 mb-3 small d-flex align-items-center gap-2">
+                            <i class="bx bx-info-circle fs-5"></i>
+                            <div>{{ session('warning') }}</div>
+                        </div>
+                    @endif
+
                     @if(session('success'))
                         <div class="alert alert-success py-2 px-3 mb-3 small d-flex align-items-center gap-2">
                             <i class="bx bx-check-circle fs-5"></i>
@@ -65,19 +72,22 @@
                         <input type="hidden" name="email" value="{{ $email }}">
                         
                         <div class="mb-3">
-                            <label for="otp" class="form-label fw-semibold text-heading">Kode OTP</label>
+                            <label for="otp" class="form-label fw-semibold text-heading">Kode OTP (6 Digit)</label>
                             <div class="input-group input-group-merge">
                                 <span class="input-group-text"><i class="bx bx-key"></i></span>
                                 <input 
                                     type="text" 
-                                    class="form-control" 
+                                    class="form-control text-center fw-bold fs-4" 
                                     id="otp" 
                                     name="otp" 
-                                    placeholder="123456" 
+                                    placeholder="••••••" 
                                     maxlength="6"
                                     autofocus 
                                     required 
                                 />
+                            </div>
+                            <div class="form-text text-muted small">
+                                Masukkan 6-digit kode OTP yang dikirim ke email <strong>{{ $email }}</strong>.
                             </div>
                         </div>
 
@@ -120,8 +130,20 @@
                         </div>
                     </form>
 
+                    <!-- Form Kirim Ulang OTP Reset -->
+                    <form action="{{ route('resend-reset-otp') }}" method="POST" class="text-center mb-3">
+                        @csrf
+                        <input type="hidden" name="email" value="{{ $email }}">
+                        <p class="mb-0 small text-muted">
+                            Tidak menerima kode OTP? 
+                            <button type="submit" class="btn btn-link btn-sm p-0 fw-semibold text-primary text-decoration-none">
+                                Kirim Ulang Kode
+                            </button>
+                        </p>
+                    </form>
+
                     <div class="text-center">
-                        <a href="{{ route('login') }}" class="d-flex align-items-center justify-content-center">
+                        <a href="{{ route('login') }}" class="d-flex align-items-center justify-content-center small text-muted">
                             <i class="bx bx-chevron-left scaleX-n1-rtl bx-sm"></i>
                             Kembali ke login
                         </a>

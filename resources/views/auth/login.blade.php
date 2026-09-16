@@ -63,9 +63,23 @@
                         </div>
                     @endif
 
-                    @if(session('info'))
+                    @if(session('warning'))
+                        <div class="alert alert-warning py-2 px-3 mb-3 small d-flex align-items-center gap-2">
+                            <i class="bx bx-info-circle fs-5"></i>
+                            <div>{{ session('warning') }}</div>
+                        </div>
+                    @endif
+
+                    @if(session('success'))
                         <div class="alert alert-success py-2 px-3 mb-3 small d-flex align-items-center gap-2">
                             <i class="bx bx-check-circle fs-5"></i>
+                            <div>{{ session('success') }}</div>
+                        </div>
+                    @endif
+
+                    @if(session('info'))
+                        <div class="alert alert-info py-2 px-3 mb-3 small d-flex align-items-center gap-2">
+                            <i class="bx bx-info-circle fs-5"></i>
                             <div>{{ session('info') }}</div>
                         </div>
                     @endif
