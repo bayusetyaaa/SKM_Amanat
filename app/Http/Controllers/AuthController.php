@@ -85,9 +85,105 @@ class AuthController extends Controller
             'cakruma' => 'proses_seleksi',
         ]);
 
+        // Generate OTP for registration
+        $otp = rand(100000, 999999);
+        \Illuminate\Support\Facades\Cache::put('register_otp_' . $user->email, $otp, now()->addMinutes(10));
+        
+        try {
+            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\OtpVerificationMail($otp, 'register'));
+        } catch (\Exception $e) {
+            // Ignore mail errors in case of missing env configs
+        }
+
+        return redirect()->route('verify-otp', ['email' => $user->email])->with('success', 'Pendaftaran akun berhasil! Silakan cek email Anda untuk mendapatkan kode OTP.');
+    }
+
+    public function showVerifyOtp(Request $request)
+    {
+        if (!$request->has('email')) {
+            return redirect()->route('login');
+        }
+        return view('auth.verify-otp', ['email' => $request->email]);
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'otp' => 'required|numeric',
+        ]);
+
+        $cachedOtp = \Illuminate\Support\Facades\Cache::get('register_otp_' . $request->email);
+
+        if (!$cachedOtp || $cachedOtp != $request->otp) {
+            return back()->withErrors(['otp' => 'Kode OTP tidak valid atau sudah kadaluarsa.'])->withInput();
+        }
+
+        $user = User::where('email', $request->email)->first();
+        $user->email_verified_at = now();
+        $user->save();
+
+        \Illuminate\Support\Facades\Cache::forget('register_otp_' . $request->email);
+
         Auth::login($user);
 
-        return redirect()->route('member.dashboard')->with('success', 'Pendaftaran akun berhasil! Silakan lengkapi profil dan unggah berkas persyaratan Anda.');
+        return redirect()->route('member.dashboard')->with('success', 'Email berhasil diverifikasi. Silakan lengkapi profil dan unggah berkas persyaratan Anda.');
+    }
+
+    public function showForgotPassword()
+    {
+        return view('auth.forgot-password');
+    }
+
+    public function sendResetOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email'
+        ], [
+            'email.exists' => 'Email tidak terdaftar dalam sistem.'
+        ]);
+
+        $otp = rand(100000, 999999);
+        \Illuminate\Support\Facades\Cache::put('reset_otp_' . $request->email, $otp, now()->addMinutes(10));
+        
+        try {
+            \Illuminate\Support\Facades\Mail::to($request->email)->send(new \App\Mail\OtpVerificationMail($otp, 'reset'));
+        } catch (\Exception $e) {
+            // Ignore mail errors
+        }
+
+        return redirect()->route('reset-password', ['email' => $request->email])->with('success', 'Kode OTP reset sandi telah dikirim ke email Anda.');
+    }
+
+    public function showResetPassword(Request $request)
+    {
+        if (!$request->has('email')) {
+            return redirect()->route('forgot-password');
+        }
+        return view('auth.reset-password', ['email' => $request->email]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'otp' => 'required|numeric',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        $cachedOtp = \Illuminate\Support\Facades\Cache::get('reset_otp_' . $request->email);
+
+        if (!$cachedOtp || $cachedOtp != $request->otp) {
+            return back()->withErrors(['otp' => 'Kode OTP tidak valid atau sudah kadaluarsa.'])->withInput();
+        }
+
+        $user = User::where('email', $request->email)->first();
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        \Illuminate\Support\Facades\Cache::forget('reset_otp_' . $request->email);
+
+        return redirect()->route('login')->with('success', 'Kata sandi berhasil diatur ulang. Silakan login dengan kata sandi baru Anda.');
     }
 
     public function logout(Request $request)

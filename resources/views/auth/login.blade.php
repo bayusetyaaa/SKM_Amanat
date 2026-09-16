@@ -96,7 +96,7 @@
                         <div class="mb-3 form-password-toggle">
                             <div class="d-flex justify-content-between align-items-center mb-1">
                                 <label class="form-label fw-semibold text-heading mb-0" for="password">Kata Sandi</label>
-                                <a href="javascript:void(0);" onclick="alert('Untuk bantuan reset kata sandi, silakan hubungi Pengurus / HRD SKM Amanat.')" class="small text-primary fw-semibold">
+                                <a href="{{ route('forgot-password') }}" class="small text-primary fw-semibold">
                                     Lupa sandi?
                                 </a>
                             </div>
