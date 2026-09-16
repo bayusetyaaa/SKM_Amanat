@@ -80,9 +80,9 @@ class AuthController extends Controller
             'prodi' => $validated['prodi'] ?? null,
             'angkatan' => $validated['angkatan'] ?? date('Y'),
             'no_hp' => $validated['no_hp'] ?? null,
-            'seleksi_administrasi' => 'proses_seleksi',
-            'tes_tulis_wawancara' => 'proses_seleksi',
-            'cakruma' => 'proses_seleksi',
+            'seleksi_administrasi' => null,
+            'tes_tulis_wawancara' => null,
+            'cakruma' => null,
         ]);
 
         // Generate OTP for registration
