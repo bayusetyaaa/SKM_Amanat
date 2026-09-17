@@ -102,7 +102,7 @@ class ProfileMatchingService
                     'ncf' => $res['ncf'],
                     'nsf' => $res['nsf'],
                     'nilai_total' => $res['nilai_total'],
-                    'rekomendasi' => $isRecommended,
+                    'rekomendasi' => \Illuminate\Support\Facades\DB::raw($isRecommended ? 'true' : 'false'),
                 ]
             );
         }
