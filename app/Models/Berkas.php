@@ -23,29 +23,9 @@ class Berkas extends Model
         'catatan',
     ];
 
-    protected static function booted()
-    {
-        static::addGlobalScope('excludeFileData', function ($builder) {
-            $builder->select([
-                'id',
-                'user_id',
-                'jenis_berkas',
-                'nama_file',
-                'file_path',
-                'mime_type',
-                'ukuran_file',
-                'status',
-                'catatan',
-                'created_at',
-                'updated_at',
-            ]);
-        });
-    }
-
-    public function scopeWithFileData($query)
-    {
-        return $query->withoutGlobalScope('excludeFileData');
-    }
+    protected $hidden = [
+        'file_data',
+    ];
 
     public function user()
     {

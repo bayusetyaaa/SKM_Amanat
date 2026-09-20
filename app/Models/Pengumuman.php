@@ -23,29 +23,9 @@ class Pengumuman extends Model
         'dibuat_oleh',
     ];
 
-    protected static function booted()
-    {
-        static::addGlobalScope('excludeLampiranData', function ($builder) {
-            $builder->select([
-                'id',
-                'judul',
-                'target_audience',
-                'isi',
-                'lampiran_path',
-                'lampiran_nama',
-                'lampiran_mime',
-                'penulis',
-                'dibuat_oleh',
-                'created_at',
-                'updated_at',
-            ]);
-        });
-    }
-
-    public function scopeWithLampiranData($query)
-    {
-        return $query->withoutGlobalScope('excludeLampiranData');
-    }
+    protected $hidden = [
+        'lampiran_data',
+    ];
 
     public function pembuat()
     {

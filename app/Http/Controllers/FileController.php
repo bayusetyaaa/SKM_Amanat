@@ -16,7 +16,7 @@ class FileController extends Controller
      */
     public function viewBerkas($id)
     {
-        $berkas = Berkas::withFileData()->findOrFail($id);
+        $berkas = Berkas::findOrFail($id);
         $user = Auth::user();
 
         // Authorization: Admin or the owner of the document
@@ -49,7 +49,7 @@ class FileController extends Controller
      */
     public function viewPengumpulanTugas($id)
     {
-        $pengumpulan = PengumpulanTugas::withFileData()->findOrFail($id);
+        $pengumpulan = PengumpulanTugas::findOrFail($id);
         $user = Auth::user();
 
         // Authorization: Admin or the owner of the submission
@@ -82,7 +82,7 @@ class FileController extends Controller
      */
     public function viewPengumumanLampiran($id)
     {
-        $pengumuman = Pengumuman::withLampiranData()->findOrFail($id);
+        $pengumuman = Pengumuman::findOrFail($id);
 
         if (!empty($pengumuman->lampiran_data)) {
             $binary = base64_decode($pengumuman->lampiran_data);
