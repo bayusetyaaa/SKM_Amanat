@@ -97,9 +97,9 @@
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
-                        @forelse($riwayatPresensi as $p)
+                        @forelse($riwayatPresensi as $index => $p)
                             <tr>
-                                <td><strong>{{ $loop->iteration }}</strong></td>
+                                <td><strong>{{ $riwayatPresensi->firstItem() + $index }}</strong></td>
                                 <td>
                                     <span class="fw-bold text-heading">{{ $p->kegiatan->nama }}</span>
                                     <div class="small text-muted">{{ $p->kegiatan->jenis }}</div>
@@ -132,6 +132,18 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Pagination Links -->
+            @if($riwayatPresensi->hasPages())
+            <div class="card-footer py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <small class="text-muted">
+                    Menampilkan {{ $riwayatPresensi->firstItem() }} - {{ $riwayatPresensi->lastItem() }} dari {{ $riwayatPresensi->total() }} riwayat
+                </small>
+                <div>
+                    {{ $riwayatPresensi->links('pagination::bootstrap-5') }}
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 </div>

@@ -76,7 +76,7 @@ class CalonAnggotaController extends Controller
             }
         }
 
-        $calonAnggotas = $query->orderBy('name')->get();
+        $calonAnggotas = $query->orderBy('name')->paginate(10)->withQueryString();
 
         return view('admin.calon_anggota', compact('calonAnggotas'));
     }

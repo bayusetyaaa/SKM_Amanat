@@ -109,6 +109,18 @@
                         </div>
                     @endforelse
                 </div>
+
+                <!-- Pagination Links -->
+                @if($pengumumans->hasPages())
+                <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+                    <small class="text-muted">
+                        Menampilkan {{ $pengumumans->firstItem() }} - {{ $pengumumans->lastItem() }} dari {{ $pengumumans->total() }} pengumuman
+                    </small>
+                    <div>
+                        {{ $pengumumans->links('pagination::bootstrap-5') }}
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>

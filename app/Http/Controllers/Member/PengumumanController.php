@@ -12,7 +12,8 @@ class PengumumanController extends Controller
     {
         $pengumumans = Pengumuman::whereIn('target_audience', ['semua', 'calon_anggota'])
             ->orderByDesc('created_at')
-            ->get();
+            ->paginate(10)
+            ->withQueryString();
 
         return view('user.pengumuman', compact('pengumumans'));
     }

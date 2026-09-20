@@ -27,7 +27,7 @@ class HasilRekomendasiController extends Controller
             $query->whereRaw('"rekomendasi" = true');
         }
 
-        $hasilRankings = $query->orderByDesc('nilai_total')->get();
+        $hasilRankings = $query->orderByDesc('nilai_total')->paginate(10)->withQueryString();
 
         $pmService = new ProfileMatchingService();
         $calcDetailsByUser = [];

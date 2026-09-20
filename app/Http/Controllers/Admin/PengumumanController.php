@@ -12,7 +12,7 @@ class PengumumanController extends Controller
 {
     public function index()
     {
-        $pengumumans = Pengumuman::orderByDesc('created_at')->get();
+        $pengumumans = Pengumuman::orderByDesc('created_at')->paginate(10)->withQueryString();
         return view('admin.pengumuman', compact('pengumumans'));
     }
 

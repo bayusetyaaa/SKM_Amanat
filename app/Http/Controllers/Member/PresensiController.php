@@ -55,7 +55,8 @@ class PresensiController extends Controller
         $riwayatPresensi = Presensi::with('kegiatan')
             ->where('user_id', $user->id)
             ->orderByDesc('waktu_hadir')
-            ->get();
+            ->paginate(10)
+            ->withQueryString();
 
         return view('user.presensi', compact('kegiatanHariIni', 'presensiHariIni', 'riwayatPresensi'));
     }

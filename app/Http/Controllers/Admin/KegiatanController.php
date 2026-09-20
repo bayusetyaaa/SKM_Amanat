@@ -15,7 +15,7 @@ class KegiatanController extends Controller
     {
         $kegiatans = Kegiatan::withCount(['presensi' => function ($q) {
             $q->where('status', 'Hadir');
-        }])->orderByDesc('tanggal_waktu')->get();
+        }])->orderByDesc('tanggal_waktu')->paginate(10)->withQueryString();
 
         $totalCakruma = User::where('role', 'calon_anggota')->count();
 

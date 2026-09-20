@@ -110,6 +110,18 @@
                         </div>
                     @endforelse
                 </div>
+
+                <!-- Pagination Links -->
+                @if($kegiatans->hasPages())
+                <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+                    <small class="text-muted">
+                        Menampilkan {{ $kegiatans->firstItem() }} - {{ $kegiatans->lastItem() }} dari {{ $kegiatans->total() }} kegiatan
+                    </small>
+                    <div>
+                        {{ $kegiatans->links('pagination::bootstrap-5') }}
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>

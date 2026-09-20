@@ -66,7 +66,7 @@
                                     <tr>
                                         <!-- Rank Badge -->
                                         <td class="text-center">
-                                            <span class="badge rounded-pill bg-label-primary fw-bold">{{ $item->ranking ?? ($index + 1) }}</span>
+                                            <span class="badge rounded-pill bg-label-primary fw-bold">{{ $item->ranking ?? ($hasilRankings->firstItem() + $index) }}</span>
                                         </td>
 
                                         <!-- Nama & Penetapan Final -->
@@ -213,6 +213,18 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <!-- Pagination Links -->
+                    @if($hasilRankings->hasPages())
+                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                        <small class="text-muted">
+                            Menampilkan {{ $hasilRankings->firstItem() }} - {{ $hasilRankings->lastItem() }} dari {{ $hasilRankings->total() }} peringkat
+                        </small>
+                        <div>
+                            {{ $hasilRankings->links('pagination::bootstrap-5') }}
+                        </div>
+                    </div>
+                    @endif
 
                     <!-- Action Buttons -->
                     <div class="d-flex flex-wrap gap-2 justify-content-center">

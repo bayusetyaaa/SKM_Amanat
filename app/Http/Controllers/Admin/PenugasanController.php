@@ -15,7 +15,7 @@ class PenugasanController extends Controller
 {
     public function index()
     {
-        $penugasans = Penugasan::withCount('pengumpulanTugas')->orderByDesc('created_at')->get();
+        $penugasans = Penugasan::withCount('pengumpulanTugas')->orderByDesc('created_at')->paginate(10)->withQueryString();
         
         $calonAnggotas = User::where('role', 'calon_anggota')
             ->with(['profil', 'nilaiEvaluasi'])
