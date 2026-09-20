@@ -18,6 +18,98 @@ if ($authUser && $authUser->role === 'calon_anggota') {
 }
 @endphp
 
+<!-- Custom Blue Sidebar Theme -->
+<style>
+    #layout-menu.bg-menu-theme {
+        background: linear-gradient(180deg, #696cff 0%, #5457db 100%) !important;
+        box-shadow: 0 4px 20px 0 rgba(105, 108, 255, 0.25) !important;
+    }
+
+    #layout-menu .app-brand .app-brand-text {
+        color: #ffffff !important;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+    #layout-menu .app-brand .app-brand-logo {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 4px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #layout-menu .layout-menu-toggle i {
+        color: #ffffff !important;
+    }
+
+    #layout-menu .menu-divider {
+        border-color: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    #layout-menu .menu-header-text {
+        color: rgba(255, 255, 255, 0.65) !important;
+        font-weight: 600;
+        font-size: 0.75rem;
+        letter-spacing: 0.8px;
+    }
+
+    #layout-menu .menu-item .menu-link {
+        color: rgba(255, 255, 255, 0.88) !important;
+        font-weight: 500;
+        transition: all 0.2s ease-in-out;
+        border-radius: 0.5rem;
+        margin: 2px 10px;
+    }
+
+    #layout-menu .menu-item .menu-link:hover {
+        background-color: rgba(255, 255, 255, 0.18) !important;
+        color: #ffffff !important;
+    }
+
+    #layout-menu .menu-item .menu-link i {
+        color: rgba(255, 255, 255, 0.9) !important;
+        font-size: 1.25rem;
+    }
+
+    /* Active Menu Item */
+    #layout-menu .menu-item.active > .menu-link {
+        background-color: #ffffff !important;
+        color: #696cff !important;
+        font-weight: 700 !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    #layout-menu .menu-item.active > .menu-link i {
+        color: #696cff !important;
+    }
+
+    #layout-menu .menu-item.active > .menu-link .badge {
+        background-color: #696cff !important;
+        color: #ffffff !important;
+    }
+
+    /* Submenu */
+    #layout-menu .menu-sub {
+        background: rgba(0, 0, 0, 0.08) !important;
+        border-radius: 0.5rem;
+        margin: 4px 10px;
+        padding: 4px 0;
+    }
+
+    #layout-menu .menu-sub .menu-link {
+        color: rgba(255, 255, 255, 0.8) !important;
+        margin: 1px 8px;
+    }
+
+    #layout-menu .menu-sub .menu-item.active > .menu-link {
+        background-color: rgba(255, 255, 255, 0.25) !important;
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+</style>
+
 <!-- Sidebar / Menu -->
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
 
