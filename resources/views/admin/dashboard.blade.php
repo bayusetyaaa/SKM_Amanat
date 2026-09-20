@@ -22,20 +22,20 @@
     </div>
 
     <!-- Statistics Cards -->
-    <!-- 1. Total Pendaftar -->
+    <!-- 1. Total Pendaftar (Biru) -->
     <div class="col-sm-6 col-xl-3">
-        <div class="card shadow-sm h-100">
+        <div class="card shadow-sm h-100 border-0" style="background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); border-left: 4px solid #696cff !important;">
             <div class="card-body">
                 <div class="d-flex align-items-start justify-content-between">
                     <div class="content-left">
-                        <span class="text-heading text-uppercase fs-tiny fw-medium">Total Pendaftar</span>
+                        <span class="text-primary text-uppercase fs-tiny fw-bold">Total Pendaftar</span>
                         <div class="d-flex align-items-center my-1">
                             <h3 class="mb-0 me-2 fw-bold text-primary">{{ $totalPendaftar }}</h3>
                         </div>
-                        <small class="text-muted">Pendaftar akun / formulir</small>
+                        <small class="text-secondary fw-medium">Pendaftar akun / formulir</small>
                     </div>
                     <div class="avatar">
-                        <span class="avatar-initial rounded bg-label-primary">
+                        <span class="avatar-initial rounded-3 bg-primary text-white shadow-sm">
                             <i class="bx bx-group bx-sm"></i>
                         </span>
                     </div>
@@ -44,20 +44,20 @@
         </div>
     </div>
 
-    <!-- 2. Total Cakruma Aktif -->
+    <!-- 2. Total Cakruma Aktif (Oranye/Kuning) -->
     <div class="col-sm-6 col-xl-3">
-        <div class="card shadow-sm h-100">
+        <div class="card shadow-sm h-100 border-0" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border-left: 4px solid #ffab00 !important;">
             <div class="card-body">
                 <div class="d-flex align-items-start justify-content-between">
                     <div class="content-left">
-                        <span class="text-heading text-uppercase fs-tiny fw-medium">Total Cakruma Aktif</span>
+                        <span class="text-warning text-uppercase fs-tiny fw-bold">Total Cakruma Aktif</span>
                         <div class="d-flex align-items-center my-1">
                             <h3 class="mb-0 me-2 fw-bold text-warning">{{ $totalCakrumaAktif }}</h3>
                         </div>
-                        <small class="text-muted">Semua anggota kecuali tidak lolos</small>
+                        <small class="text-secondary fw-medium">Semua anggota kecuali tidak lolos</small>
                     </div>
                     <div class="avatar">
-                        <span class="avatar-initial rounded bg-label-warning">
+                        <span class="avatar-initial rounded-3 bg-warning text-white shadow-sm">
                             <i class="bx bx-user-check bx-sm"></i>
                         </span>
                     </div>
@@ -66,19 +66,20 @@
         </div>
     </div>
 
+    <!-- 3. Rekomendasi Redaksi (Hijau) -->
     <div class="col-sm-6 col-xl-3">
-        <div class="card shadow-sm h-100">
+        <div class="card shadow-sm h-100 border-0" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-left: 4px solid #71dd37 !important;">
             <div class="card-body">
                 <div class="d-flex align-items-start justify-content-between">
                     <div class="content-left">
-                        <span class="text-heading text-uppercase fs-tiny fw-medium">Rekomendasi Redaksi</span>
+                        <span class="text-success text-uppercase fs-tiny fw-bold">Rekomendasi Redaksi</span>
                         <div class="d-flex align-items-center my-1">
                             <h3 class="mb-0 me-2 fw-bold text-success">{{ $countRedaksi }}</h3>
                         </div>
-                        <small class="text-muted">Hasil Profile Matching</small>
+                        <small class="text-secondary fw-medium">Hasil Profile Matching</small>
                     </div>
                     <div class="avatar">
-                        <span class="avatar-initial rounded bg-label-success">
+                        <span class="avatar-initial rounded-3 bg-success text-white shadow-sm">
                             <i class="bx bx-pen bx-sm"></i>
                         </span>
                     </div>
@@ -87,19 +88,20 @@
         </div>
     </div>
 
+    <!-- 4. Rekomendasi Konten (Cyan) -->
     <div class="col-sm-6 col-xl-3">
-        <div class="card shadow-sm h-100">
+        <div class="card shadow-sm h-100 border-0" style="background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%); border-left: 4px solid #03c3ec !important;">
             <div class="card-body">
                 <div class="d-flex align-items-start justify-content-between">
                     <div class="content-left">
-                        <span class="text-heading text-uppercase fs-tiny fw-medium">Rekomendasi Konten</span>
+                        <span class="text-info text-uppercase fs-tiny fw-bold">Rekomendasi Konten</span>
                         <div class="d-flex align-items-center my-1">
                             <h3 class="mb-0 me-2 fw-bold text-info">{{ $countKonten }}</h3>
                         </div>
-                        <small class="text-muted">Hasil Profile Matching</small>
+                        <small class="text-secondary fw-medium">Hasil Profile Matching</small>
                     </div>
                     <div class="avatar">
-                        <span class="avatar-initial rounded bg-label-info">
+                        <span class="avatar-initial rounded-3 bg-info text-white shadow-sm">
                             <i class="bx bx-video bx-sm"></i>
                         </span>
                     </div>

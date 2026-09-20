@@ -65,31 +65,39 @@
 
     <!-- Status Cards -->
     <div class="{{ $userStatus === 'tidak_lolos' ? 'col-md-6' : 'col-md-4' }}">
-        <div class="card shadow-sm h-100">
+        @php
+            $statusCardBg = match($userStatus) {
+                'lolos' => 'background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-left: 4px solid #71dd37 !important;',
+                'tidak_lolos' => 'background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); border-left: 4px solid #ff3e1d !important;',
+                'menunggu_verifikasi' => 'background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border-left: 4px solid #ffab00 !important;',
+                default => 'background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); border-left: 4px solid #696cff !important;',
+            };
+        @endphp
+        <div class="card shadow-sm h-100 border-0" style="{{ $statusCardBg }}">
             <div class="card-body">
                 <div class="d-flex align-items-start justify-content-between mb-2">
-                    <span class="text-heading text-uppercase fs-tiny fw-medium">Status Seleksi</span>
+                    <span class="text-heading text-uppercase fs-tiny fw-bold">Status Seleksi</span>
                     <div class="avatar avatar-sm">
-                        <span class="avatar-initial rounded {{ $userStatus === 'tidak_lolos' ? 'bg-label-danger' : 'bg-label-primary' }}">
+                        <span class="avatar-initial rounded {{ $userStatus === 'tidak_lolos' ? 'bg-danger text-white' : 'bg-primary text-white' }} shadow-sm">
                             <i class="bx {{ $userStatus === 'tidak_lolos' ? 'bx-x' : 'bx-user-check' }}"></i>
                         </span>
                     </div>
                 </div>
                 <div>
                     @if($userStatus === 'lolos')
-                        <span class="badge bg-label-success fs-6 px-3 py-1">
+                        <span class="badge bg-success fs-6 px-3 py-1 text-white shadow-sm">
                             <i class="bx bx-check-circle me-1"></i> LOLOS
                         </span>
                     @elseif($userStatus === 'tidak_lolos')
-                        <span class="badge bg-label-danger fs-6 px-3 py-1">
+                        <span class="badge bg-danger fs-6 px-3 py-1 text-white shadow-sm">
                             <i class="bx bx-x-circle me-1"></i> TIDAK LOLOS
                         </span>
                     @elseif($userStatus === 'menunggu_verifikasi')
-                        <span class="badge bg-label-warning fs-6 px-3 py-1">
+                        <span class="badge bg-warning fs-6 px-3 py-1 text-white shadow-sm">
                             <i class="bx bx-time-five me-1"></i> MENUNGGU VERIFIKASI
                         </span>
                     @else
-                        <span class="badge bg-label-info fs-6 px-3 py-1">
+                        <span class="badge bg-primary fs-6 px-3 py-1 text-white shadow-sm">
                             <i class="bx bx-sync me-1"></i> PROSES SELEKSI
                         </span>
                     @endif
@@ -99,19 +107,19 @@
     </div>
 
     <div class="{{ $userStatus === 'tidak_lolos' ? 'col-md-6' : 'col-md-4' }}">
-        <div class="card shadow-sm h-100">
+        <div class="card shadow-sm h-100 border-0" style="background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%); border-left: 4px solid #03c3ec !important;">
             <div class="card-body">
                 <div class="d-flex align-items-start justify-content-between mb-2">
-                    <span class="text-heading text-uppercase fs-tiny fw-medium">Berkas Terunggah</span>
+                    <span class="text-info text-uppercase fs-tiny fw-bold">Berkas Terunggah</span>
                     <div class="avatar avatar-sm">
-                        <span class="avatar-initial rounded bg-label-info"><i class="bx bxs-file-pdf"></i></span>
+                        <span class="avatar-initial rounded bg-info text-white shadow-sm"><i class="bx bxs-file-pdf"></i></span>
                     </div>
                 </div>
                 <div class="d-flex align-items-baseline gap-2">
-                    <h3 class="mb-0 fw-bold">{{ $user->berkas->count() }}</h3>
-                    <small class="text-muted">dari 4 berkas wajib</small>
+                    <h3 class="mb-0 fw-bold text-info">{{ $user->berkas->count() }}</h3>
+                    <small class="text-secondary fw-medium">dari 4 berkas wajib</small>
                 </div>
-                <a href="{{ route('member.profil') }}" class="small text-primary fw-semibold d-inline-block mt-2">
+                <a href="{{ route('member.profil') }}" class="small text-info fw-bold d-inline-block mt-2">
                     Periksa & Unggah Berkas &rarr;
                 </a>
             </div>
@@ -120,33 +128,33 @@
 
     @if($userStatus !== 'tidak_lolos')
     <div class="col-md-4">
-        <div class="card shadow-sm h-100">
+        <div class="card shadow-sm h-100 border-0" style="{{ $userStatus === 'lolos' ? 'background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-left: 4px solid #71dd37 !important;' : 'background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-left: 4px solid #94a3b8 !important;' }}">
             <div class="card-body">
                 <div class="d-flex align-items-start justify-content-between mb-2">
-                    <span class="text-heading text-uppercase fs-tiny fw-medium">Rekomendasi Divisi</span>
+                    <span class="{{ $userStatus === 'lolos' ? 'text-success' : 'text-secondary' }} text-uppercase fs-tiny fw-bold">Rekomendasi Divisi</span>
                     <div class="avatar avatar-sm">
-                        <span class="avatar-initial rounded {{ $userStatus === 'lolos' ? 'bg-label-success' : 'bg-label-secondary' }}">
+                        <span class="avatar-initial rounded {{ $userStatus === 'lolos' ? 'bg-success text-white' : 'bg-secondary text-white' }} shadow-sm">
                             <i class="bx {{ $userStatus === 'lolos' ? 'bx-trophy' : 'bx-lock-alt' }}"></i>
                         </span>
                     </div>
                 </div>
                 @if($userStatus !== 'lolos')
-                    <div class="fw-semibold text-muted">Menu Belum Dibuka</div>
+                    <div class="fw-semibold text-secondary">Menu Belum Dibuka</div>
                     <small class="text-muted d-block mt-1">
                         <i class="bx bx-info-circle me-1"></i> Rekomendasi divisi & magang spesialis hanya dapat diakses setelah dinyatakan <strong>LOLOS</strong> pada seluruh tahapan seleksi.
                     </small>
                 @elseif($hasilRekomendasi)
                     <div>
-                        <span class="badge {{ $hasilRekomendasi->divisi->nama === 'Redaksi' ? 'bg-label-success' : 'bg-label-info' }} fs-6 px-3 py-1">
+                        <span class="badge {{ $hasilRekomendasi->divisi->nama === 'Redaksi' ? 'bg-success' : 'bg-info' }} fs-6 px-3 py-1 text-white shadow-sm">
                             Divisi {{ $hasilRekomendasi->divisi->nama }}
                         </span>
-                        <div class="small fw-semibold mt-1">Skor Total: {{ number_format($hasilRekomendasi->nilai_total, 2) }}</div>
+                        <div class="small fw-semibold mt-1 text-dark">Skor Total: {{ number_format($hasilRekomendasi->nilai_total, 2) }}</div>
                     </div>
-                    <a href="{{ route('member.hasil-rekomendasi') }}" class="small text-success fw-semibold d-inline-block mt-1">
+                    <a href="{{ route('member.hasil-rekomendasi') }}" class="small text-success fw-bold d-inline-block mt-1">
                         Lihat Rincian Profile Matching &rarr;
                     </a>
                 @else
-                    <div class="fw-semibold text-muted">Menunggu Penilaian Evaluasi</div>
+                    <div class="fw-semibold text-secondary">Menunggu Penilaian Evaluasi</div>
                     <small class="text-muted">Nilai sedang diproses oleh tim HRD</small>
                 @endif
             </div>
