@@ -105,12 +105,12 @@ try {
     /** @var Application $app */
     $app = require_once __DIR__ . '/../bootstrap/app.php';
 
-    // 7. Run migrations if DB is configured (pgsql)
+    // 7. Run migrations only if explicitly enabled via RUN_MIGRATIONS=true (avoids 3-4s cold-start delay)
     $dbConnection = getenv('DB_CONNECTION') ?: ($_ENV['DB_CONNECTION'] ?? 'sqlite');
     $dbHost = getenv('DB_HOST') ?: ($_ENV['DB_HOST'] ?? '');
+    $runMigrations = (getenv('RUN_MIGRATIONS') === 'true' || ($_ENV['RUN_MIGRATIONS'] ?? '') === 'true');
 
-    if ($dbConnection === 'pgsql' && !empty($dbHost)) {
-        // Use a lock file in /tmp to avoid running migrations on every request
+    if ($runMigrations && $dbConnection === 'pgsql' && !empty($dbHost)) {
         $migrationLockFile = '/tmp/storage/migrations_ran.lock';
         if (!file_exists($migrationLockFile)) {
             try {
@@ -124,9 +124,7 @@ try {
                 }
                 file_put_contents($migrationLockFile, date('Y-m-d H:i:s') . ' - users:' . $userCount);
             } catch (\Throwable $migrationError) {
-                // Log migration error but don't stop the app
                 error_log('Migration error: ' . $migrationError->getMessage());
-                // Still create the lock file to prevent infinite retries on error
                 file_put_contents($migrationLockFile, 'error: ' . $migrationError->getMessage());
             }
         }
