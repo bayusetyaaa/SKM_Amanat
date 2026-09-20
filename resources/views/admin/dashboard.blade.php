@@ -22,20 +22,20 @@
     </div>
 
     <!-- Statistics Cards -->
-    <!-- 1. Total Pendaftar (Biru) -->
+    <!-- 1. Total Pendaftar (Full Biru) -->
     <div class="col-sm-6 col-xl-3">
-        <div class="card shadow-sm h-100 border-0" style="background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); border-left: 4px solid #696cff !important;">
+        <div class="card h-100 border-0 text-white shadow" style="background: linear-gradient(135deg, #696cff 0%, #484be2 100%);">
             <div class="card-body">
                 <div class="d-flex align-items-start justify-content-between">
                     <div class="content-left">
-                        <span class="text-primary text-uppercase fs-tiny fw-bold">Total Pendaftar</span>
+                        <span class="text-uppercase fs-tiny fw-semibold" style="color: rgba(255, 255, 255, 0.85); letter-spacing: 0.5px;">Total Pendaftar</span>
                         <div class="d-flex align-items-center my-1">
-                            <h3 class="mb-0 me-2 fw-bold text-primary">{{ $totalPendaftar }}</h3>
+                            <h3 class="mb-0 me-2 fw-bold text-white">{{ $totalPendaftar }}</h3>
                         </div>
-                        <small class="text-secondary fw-medium">Pendaftar akun / formulir</small>
+                        <small style="color: rgba(255, 255, 255, 0.75);">Pendaftar akun / formulir</small>
                     </div>
                     <div class="avatar">
-                        <span class="avatar-initial rounded-3 bg-primary text-white shadow-sm">
+                        <span class="avatar-initial rounded-3 text-white shadow-sm" style="background: rgba(255, 255, 255, 0.25);">
                             <i class="bx bx-group bx-sm"></i>
                         </span>
                     </div>
@@ -44,20 +44,20 @@
         </div>
     </div>
 
-    <!-- 2. Total Cakruma Aktif (Oranye/Kuning) -->
+    <!-- 2. Total Cakruma Aktif (Full Oranye/Kuning) -->
     <div class="col-sm-6 col-xl-3">
-        <div class="card shadow-sm h-100 border-0" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border-left: 4px solid #ffab00 !important;">
+        <div class="card h-100 border-0 text-white shadow" style="background: linear-gradient(135deg, #ffab00 0%, #e08700 100%);">
             <div class="card-body">
                 <div class="d-flex align-items-start justify-content-between">
                     <div class="content-left">
-                        <span class="text-warning text-uppercase fs-tiny fw-bold">Total Cakruma Aktif</span>
+                        <span class="text-uppercase fs-tiny fw-semibold" style="color: rgba(255, 255, 255, 0.9); letter-spacing: 0.5px;">Total Cakruma Aktif</span>
                         <div class="d-flex align-items-center my-1">
-                            <h3 class="mb-0 me-2 fw-bold text-warning">{{ $totalCakrumaAktif }}</h3>
+                            <h3 class="mb-0 me-2 fw-bold text-white">{{ $totalCakrumaAktif }}</h3>
                         </div>
-                        <small class="text-secondary fw-medium">Semua anggota kecuali tidak lolos</small>
+                        <small style="color: rgba(255, 255, 255, 0.8);">Semua anggota kecuali tidak lolos</small>
                     </div>
                     <div class="avatar">
-                        <span class="avatar-initial rounded-3 bg-warning text-white shadow-sm">
+                        <span class="avatar-initial rounded-3 text-white shadow-sm" style="background: rgba(255, 255, 255, 0.25);">
                             <i class="bx bx-user-check bx-sm"></i>
                         </span>
                     </div>
@@ -66,20 +66,20 @@
         </div>
     </div>
 
-    <!-- 3. Rekomendasi Redaksi (Hijau) -->
+    <!-- 3. Rekomendasi Redaksi (Full Hijau) -->
     <div class="col-sm-6 col-xl-3">
-        <div class="card shadow-sm h-100 border-0" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-left: 4px solid #71dd37 !important;">
+        <div class="card h-100 border-0 text-white shadow" style="background: linear-gradient(135deg, #71dd37 0%, #4fad1e 100%);">
             <div class="card-body">
                 <div class="d-flex align-items-start justify-content-between">
                     <div class="content-left">
-                        <span class="text-success text-uppercase fs-tiny fw-bold">Rekomendasi Redaksi</span>
+                        <span class="text-uppercase fs-tiny fw-semibold" style="color: rgba(255, 255, 255, 0.9); letter-spacing: 0.5px;">Rekomendasi Redaksi</span>
                         <div class="d-flex align-items-center my-1">
-                            <h3 class="mb-0 me-2 fw-bold text-success">{{ $countRedaksi }}</h3>
+                            <h3 class="mb-0 me-2 fw-bold text-white">{{ $countRedaksi }}</h3>
                         </div>
-                        <small class="text-secondary fw-medium">Hasil Profile Matching</small>
+                        <small style="color: rgba(255, 255, 255, 0.8);">Hasil Profile Matching</small>
                     </div>
                     <div class="avatar">
-                        <span class="avatar-initial rounded-3 bg-success text-white shadow-sm">
+                        <span class="avatar-initial rounded-3 text-white shadow-sm" style="background: rgba(255, 255, 255, 0.25);">
                             <i class="bx bx-pen bx-sm"></i>
                         </span>
                     </div>
@@ -88,20 +88,20 @@
         </div>
     </div>
 
-    <!-- 4. Rekomendasi Konten (Cyan) -->
+    <!-- 4. Rekomendasi Konten (Full Cyan) -->
     <div class="col-sm-6 col-xl-3">
-        <div class="card shadow-sm h-100 border-0" style="background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%); border-left: 4px solid #03c3ec !important;">
+        <div class="card h-100 border-0 text-white shadow" style="background: linear-gradient(135deg, #03c3ec 0%, #0294b3 100%);">
             <div class="card-body">
                 <div class="d-flex align-items-start justify-content-between">
                     <div class="content-left">
-                        <span class="text-info text-uppercase fs-tiny fw-bold">Rekomendasi Konten</span>
+                        <span class="text-uppercase fs-tiny fw-semibold" style="color: rgba(255, 255, 255, 0.9); letter-spacing: 0.5px;">Rekomendasi Konten</span>
                         <div class="d-flex align-items-center my-1">
-                            <h3 class="mb-0 me-2 fw-bold text-info">{{ $countKonten }}</h3>
+                            <h3 class="mb-0 me-2 fw-bold text-white">{{ $countKonten }}</h3>
                         </div>
-                        <small class="text-secondary fw-medium">Hasil Profile Matching</small>
+                        <small style="color: rgba(255, 255, 255, 0.8);">Hasil Profile Matching</small>
                     </div>
                     <div class="avatar">
-                        <span class="avatar-initial rounded-3 bg-info text-white shadow-sm">
+                        <span class="avatar-initial rounded-3 text-white shadow-sm" style="background: rgba(255, 255, 255, 0.25);">
                             <i class="bx bx-video bx-sm"></i>
                         </span>
                     </div>
