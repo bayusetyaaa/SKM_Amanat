@@ -84,7 +84,7 @@
                                         </div>
                                         <h6 class="mb-1 fw-bold text-heading">{{ $p->judul }}</h6>
                                         <p class="small text-muted mb-2 text-truncate" style="max-width: 400px;">{{ $p->isi }}</p>
-                                        @if($p->lampiran_data || $p->lampiran_path)
+                                        @if($p->lampiran_nama || $p->lampiran_path)
                                             <a href="{{ route('pengumuman.lampiran', $p->id) }}" target="_blank" class="badge bg-label-primary">
                                                 <i class="bx bx-paperclip me-1"></i> Lihat Lampiran
                                             </a>

@@ -114,6 +114,78 @@ class ProfileMatchingService
     }
 
     /**
+     * Jalankan kalkulasi rincian Profile Matching murni di memory tanpa query database berulang atau DB write
+     */
+    public function calculateDetailsInMemory(User $user, $divisis, float $coreWeight = 0.60, float $secondaryWeight = 0.40): array
+    {
+        $nilaiEvaluasi = $user->nilaiEvaluasi ? $user->nilaiEvaluasi->pluck('nilai_aktual', 'kriteria_id')->toArray() : [];
+
+        $results = [];
+        $highestScore = -1;
+        $recommendedDivisiId = null;
+
+        foreach ($divisis as $divisi) {
+            $coreBobotSum = 0;
+            $coreCount = 0;
+            $secondaryBobotSum = 0;
+            $secondaryCount = 0;
+            $detailKriteria = [];
+
+            foreach ($divisi->profilTarget as $target) {
+                $kriteriaId = $target->kriteria_id;
+                $targetNilai = (float) $target->nilai_target;
+                $aktualNilai = isset($nilaiEvaluasi[$kriteriaId]) ? (float) $nilaiEvaluasi[$kriteriaId] : 0.0;
+
+                $gap = $aktualNilai - $targetNilai;
+                $bobot = $this->convertGapToBobot($gap);
+
+                $detailKriteria[] = [
+                    'kriteria_id' => $kriteriaId,
+                    'kode' => $target->kriteria->kode ?? ('K' . $kriteriaId),
+                    'nama' => $target->kriteria->nama ?? '',
+                    'aspek' => $target->kriteria->aspek ?? '',
+                    'faktor' => $target->faktor,
+                    'target' => $targetNilai,
+                    'aktual' => $aktualNilai,
+                    'gap' => $gap,
+                    'bobot' => $bobot,
+                ];
+
+                if ($target->faktor === 'core') {
+                    $coreBobotSum += $bobot;
+                    $coreCount++;
+                } else {
+                    $secondaryBobotSum += $bobot;
+                    $secondaryCount++;
+                }
+            }
+
+            $ncf = $coreCount > 0 ? round($coreBobotSum / $coreCount, 2) : 0.0;
+            $nsf = $secondaryCount > 0 ? round($secondaryBobotSum / $secondaryCount, 2) : 0.0;
+            $nilaiTotal = round(($coreWeight * $ncf) + ($secondaryWeight * $nsf), 2);
+
+            $results[$divisi->id] = [
+                'divisi_id' => $divisi->id,
+                'divisi_nama' => $divisi->nama,
+                'ncf' => $ncf,
+                'nsf' => $nsf,
+                'nilai_total' => $nilaiTotal,
+                'details' => $detailKriteria,
+            ];
+
+            if ($nilaiTotal > $highestScore) {
+                $highestScore = $nilaiTotal;
+                $recommendedDivisiId = $divisi->id;
+            }
+        }
+
+        return [
+            'results' => $results,
+            'recommended_divisi_id' => $recommendedDivisiId,
+        ];
+    }
+
+    /**
      * Hitung kalkulasi untuk SEMUA calon anggota dan perbarui ranking
      */
     public function calculateAndRankAll(float $coreWeight = 0.60, float $secondaryWeight = 0.40): array

@@ -4,23 +4,25 @@ use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 
-// 1. Ensure all writable storage directories exist in /tmp for Serverless environment
-$dirs = [
-    '/tmp/storage',
-    '/tmp/storage/app',
-    '/tmp/storage/app/public',
-    '/tmp/storage/framework',
-    '/tmp/storage/framework/views',
-    '/tmp/storage/framework/cache',
-    '/tmp/storage/framework/cache/data',
-    '/tmp/storage/framework/sessions',
-    '/tmp/storage/bootstrap-cache',
-    '/tmp/storage/logs',
-];
+// 1. Ensure all writable storage directories exist in /tmp for Serverless environment (only on cold start)
+if (!is_dir('/tmp/storage/framework/views')) {
+    $dirs = [
+        '/tmp/storage',
+        '/tmp/storage/app',
+        '/tmp/storage/app/public',
+        '/tmp/storage/framework',
+        '/tmp/storage/framework/views',
+        '/tmp/storage/framework/cache',
+        '/tmp/storage/framework/cache/data',
+        '/tmp/storage/framework/sessions',
+        '/tmp/storage/bootstrap-cache',
+        '/tmp/storage/logs',
+    ];
 
-foreach ($dirs as $dir) {
-    if (!is_dir($dir)) {
-        @mkdir($dir, 0777, true);
+    foreach ($dirs as $dir) {
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0777, true);
+        }
     }
 }
 
@@ -88,10 +90,11 @@ if (empty(getenv('APP_KEY')) && empty($_ENV['APP_KEY'])) {
     $_SERVER['APP_KEY'] = $defaultKey;
 }
 
-// Enable debug mode temporarily to see errors clearly
-putenv('APP_DEBUG=true');
-$_ENV['APP_DEBUG'] = 'true';
-$_SERVER['APP_DEBUG'] = 'true';
+if (getenv('APP_DEBUG') === false && !isset($_ENV['APP_DEBUG'])) {
+    putenv('APP_DEBUG=false');
+    $_ENV['APP_DEBUG'] = 'false';
+    $_SERVER['APP_DEBUG'] = 'false';
+}
 
 // 6. Bootstrap Laravel
 define('LARAVEL_START', microtime(true));

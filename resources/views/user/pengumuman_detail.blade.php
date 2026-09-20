@@ -37,7 +37,7 @@
                     {{ $pengumuman->isi }}
                 </div>
 
-                @if($pengumuman->lampiran_data || $pengumuman->lampiran_path)
+                @if($pengumuman->lampiran_nama || $pengumuman->lampiran_path)
                     <div class="pt-4 mt-4 border-top">
                         <h6 class="fw-bold text-heading mb-2"><i class="bx bx-paperclip text-primary me-1"></i> Lampiran Dokumen:</h6>
                         <a href="{{ route('pengumuman.lampiran', $pengumuman->id) }}" target="_blank" class="btn btn-outline-primary fw-semibold">

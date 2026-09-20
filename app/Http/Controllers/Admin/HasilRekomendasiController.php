@@ -14,7 +14,7 @@ class HasilRekomendasiController extends Controller
 {
     public function index(Request $request)
     {
-        $divisis = Divisi::all();
+        $divisis = Divisi::with(['profilTarget.kriteria'])->get();
         $query = HasilProfileMatching::with(['user.profil', 'divisi', 'user.nilaiEvaluasi.kriteria']);
 
         if ($request->filled('divisi') && $request->divisi !== 'Semua Divisi') {
@@ -32,8 +32,8 @@ class HasilRekomendasiController extends Controller
         $pmService = new ProfileMatchingService();
         $calcDetailsByUser = [];
         foreach ($hasilRankings as $hr) {
-            if (!isset($calcDetailsByUser[$hr->user_id])) {
-                $calcDetailsByUser[$hr->user_id] = $pmService->calculateForUser($hr->user_id);
+            if ($hr->user && !isset($calcDetailsByUser[$hr->user_id])) {
+                $calcDetailsByUser[$hr->user_id] = $pmService->calculateDetailsInMemory($hr->user, $divisis);
             }
         }
 
@@ -43,8 +43,9 @@ class HasilRekomendasiController extends Controller
     public function detailUser($userId)
     {
         $user = User::with(['profil', 'nilaiEvaluasi.kriteria'])->findOrFail($userId);
+        $divisis = Divisi::with(['profilTarget.kriteria'])->get();
         $pmService = new ProfileMatchingService();
-        $calcData = $pmService->calculateForUser($userId);
+        $calcData = $pmService->calculateDetailsInMemory($user, $divisis);
 
         return response()->json([
             'user' => $user,

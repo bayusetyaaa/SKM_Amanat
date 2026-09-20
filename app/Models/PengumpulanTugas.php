@@ -31,6 +31,24 @@ class PengumpulanTugas extends Model
 
     protected static function booted()
     {
+        static::addGlobalScope('excludeFileData', function ($builder) {
+            $builder->select([
+                'id',
+                'penugasan_id',
+                'user_id',
+                'nama_file',
+                'file_path',
+                'mime_type',
+                'ukuran_file',
+                'status',
+                'nilai',
+                'feedback',
+                'submitted_at',
+                'created_at',
+                'updated_at',
+            ]);
+        });
+
         static::saved(function ($pengumpulan) {
             if ($pengumpulan->user_id) {
                 $user = $pengumpulan->user ?? User::find($pengumpulan->user_id);
@@ -56,6 +74,11 @@ class PengumpulanTugas extends Model
                 }
             }
         });
+    }
+
+    public function scopeWithFileData($query)
+    {
+        return $query->withoutGlobalScope('excludeFileData');
     }
 
     public function penugasan()
