@@ -17,7 +17,8 @@ class NilaiEvaluasiController extends Controller
         $calonAnggotas = User::where('role', 'calon_anggota')
             ->with(['profil', 'nilaiEvaluasi'])
             ->orderBy('name')
-            ->get();
+            ->paginate(10)
+            ->withQueryString();
 
         $kriterias = Kriteria::orderBy('kode')->get();
 

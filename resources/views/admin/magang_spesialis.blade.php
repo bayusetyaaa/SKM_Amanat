@@ -97,7 +97,7 @@
                                 @endphp
                                 <tr>
                                     <!-- 1. No -->
-                                    <td class="text-center fw-bold">{{ $loop->iteration }}</td>
+                                    <td class="text-center fw-bold">{{ $anggotaList->firstItem() + $index }}</td>
 
                                     <!-- 2. Nama Lengkap -->
                                     <td>
@@ -279,6 +279,18 @@
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Pagination Links -->
+                @if($anggotaList->hasPages())
+                <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+                    <small class="text-muted">
+                        Menampilkan {{ $anggotaList->firstItem() }} - {{ $anggotaList->lastItem() }} dari {{ $anggotaList->total() }} anggota
+                    </small>
+                    <div>
+                        {{ $anggotaList->links('pagination::bootstrap-5') }}
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>

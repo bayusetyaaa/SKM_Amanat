@@ -62,7 +62,7 @@ class MagangSpesialisController extends Controller
             });
         }
 
-        $anggotaList = $query->orderBy('name')->get();
+        $anggotaList = $query->orderBy('name')->paginate(10)->withQueryString();
 
         return view('admin.magang_spesialis', compact('divisis', 'anggotaList'));
     }

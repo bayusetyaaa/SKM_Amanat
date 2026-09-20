@@ -86,6 +86,18 @@
                         </table>
                     </div>
 
+                    <!-- Pagination Links -->
+                    @if($calonAnggotas->hasPages())
+                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                        <small class="text-muted">
+                            Menampilkan {{ $calonAnggotas->firstItem() }} - {{ $calonAnggotas->lastItem() }} dari {{ $calonAnggotas->total() }} calon anggota
+                        </small>
+                        <div>
+                            {{ $calonAnggotas->links('pagination::bootstrap-5') }}
+                        </div>
+                    </div>
+                    @endif
+
                     <!-- Keterangan 7 Kriteria & Sumber Nilai -->
                     <div class="card bg-lighter border shadow-none mb-4">
                         <div class="card-body p-3">
