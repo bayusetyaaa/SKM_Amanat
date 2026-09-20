@@ -25,19 +25,44 @@ if ($authUser && $authUser->role === 'calon_anggota') {
         box-shadow: 0 4px 20px 0 rgba(105, 108, 255, 0.25) !important;
     }
 
+    #layout-menu .app-brand {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+    }
+
+    #layout-menu .app-brand .app-brand-link {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+    }
+
     #layout-menu .app-brand .app-brand-text {
         color: #ffffff !important;
         font-weight: 700;
-        letter-spacing: 0.5px;
+        font-size: 1.2rem;
+        letter-spacing: 0.3px;
     }
 
     #layout-menu .app-brand .app-brand-logo {
-        background: rgba(255, 255, 255, 0.2);
-        padding: 4px;
+        background: #ffffff !important;
+        padding: 5px 6px;
         border-radius: 8px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        flex-shrink: 0;
+    }
+
+    #layout-menu .app-brand .app-brand-logo img {
+        width: 26px;
+        height: 26px;
+        object-fit: contain;
+        display: block;
     }
 
     #layout-menu .layout-menu-toggle i {
@@ -117,9 +142,9 @@ if ($authUser && $authUser->role === 'calon_anggota') {
     <div class="app-brand demo">
         <a href="{{ url('/') }}" class="app-brand-link">
             <span class="app-brand-logo demo">
-                <img src="{{ asset('images/logo-amanat.png') }}" alt="Logo SKM Amanat" style="width: 28px; height: auto; object-fit: contain;" class="rounded">
+                <img src="{{ asset('images/logo-amanat.png') }}" alt="Logo SKM Amanat">
             </span>
-            <span class="app-brand-text demo menu-text fw-bold ms-1 fs-7 text-nowrap">{{ config('variables.templateName', 'SKM Amanat') }}</span>
+            <span class="app-brand-text demo menu-text fw-bold">{{ config('variables.templateName', 'SKM Amanat') }}</span>
         </a>
 
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
