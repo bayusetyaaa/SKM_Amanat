@@ -39,7 +39,7 @@
     {
       "src": "/logo.png",
       "headers": { "cache-control": "public, max-age=86400" },
-      "dest": "/logo.png"
+      "dest": "/images/logo-amanat.png"
     },
     {
       "src": "/(.*)",

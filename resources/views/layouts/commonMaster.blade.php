@@ -10,7 +10,7 @@
     </title>
     <meta name="description" content="{{ config('variables.templateDescription') ? config('variables.templateDescription') : '' }}" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon/favicon.ico') }}" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 
     <!-- DNS Prefetch & Preconnect for Fast Asset Loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
