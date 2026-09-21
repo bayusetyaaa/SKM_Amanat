@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Berkas;
 use App\Models\Divisi;
+use App\Models\HasilProfileMatching;
 use App\Models\Kegiatan;
 use App\Models\Kriteria;
 use App\Models\NilaiEvaluasi;
@@ -14,11 +15,12 @@ use App\Models\Presensi;
 use App\Models\ProfilCalonAnggota;
 use App\Models\ProfilTarget;
 use App\Models\User;
-use App\Services\EvaluasiNilaiService;
 use App\Services\ProfileMatchingService;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
@@ -33,13 +35,51 @@ class DatabaseSeeder extends Seeder
         PengumpulanTugas::flushEventListeners();
         Presensi::flushEventListeners();
 
-        // 1. Akun Admin / Pengurus
-        $admin = User::create([
-            'name' => 'HRD SKM Amanat',
-            'email' => 'admin@amanat.id',
-            'password' => Hash::make('password'),
+        // 0. Bersihkan seluruh tabel terkait data calon anggota & admin secara aman
+        HasilProfileMatching::query()->delete();
+        NilaiEvaluasi::query()->delete();
+        PengumpulanTugas::query()->delete();
+        Presensi::query()->delete();
+        Berkas::query()->delete();
+        ProfilCalonAnggota::query()->delete();
+        Pengumuman::query()->delete();
+        Penugasan::query()->delete();
+        Kegiatan::query()->delete();
+        ProfilTarget::query()->delete();
+        Kriteria::query()->delete();
+        Divisi::query()->delete();
+        User::query()->delete();
+
+        // 1. Akun Admin / Pengurus (4 Akun Sesuai Permintaan)
+        $adminBayu = User::create([
+            'name' => 'Bayu Setyawan',
+            'email' => 'bayusetya123456789@gmail.com',
+            'password' => Hash::make('bayu.793'),
             'role' => 'admin',
         ]);
+
+        $adminAlfarizy = User::create([
+            'name' => 'Moehammad Alfarizy',
+            'email' => 'moehammad.alfarizy@amanat.id',
+            'password' => Hash::make('alfarizy2026!'),
+            'role' => 'admin',
+        ]);
+
+        $adminMeyra = User::create([
+            'name' => 'Meyra Karunia Putri',
+            'email' => 'meyra.karuniaputri@amanat.id',
+            'password' => Hash::make('meyra2026!'),
+            'role' => 'admin',
+        ]);
+
+        $adminLutfi = User::create([
+            'name' => 'Lutfi Ardiansyah',
+            'email' => 'lutfi.ardiansyah@amanat.id',
+            'password' => Hash::make('lutfi2026!'),
+            'role' => 'admin',
+        ]);
+
+        $primaryAdminId = $adminBayu->id;
 
         // 2. Master Divisi
         $divisiRedaksi = Divisi::create([
@@ -157,144 +197,39 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // 5. Calon Anggota (Cakruma)
-        $calonAnggotaData = [
-            [
-                'name' => 'Andi Pratama',
-                'email' => 'andi@gmail.com',
-                'nim' => '2108096001',
-                'prodi' => 'Ilmu Komunikasi',
-                'angkatan' => '2024',
-                'no_hp' => '081234567890',
-                'alamat' => 'Ngaliyan, Kota Semarang',
-                'pilihan' => 'Redaksi',
-                'status' => 'lolos',
-                'keputusan' => 'Redaksi',
-                'nilai_tugas' => ['K1' => 88, 'K2' => 85, 'K3' => 75],
-                'nilai_wawancara' => ['K4' => 82, 'K5' => 70, 'K7' => 80],
-                'presensi_hadir' => [true, true, true, true, true], // 5/5 hadir (100%)
-            ],
-            [
-                'name' => 'Citra Kirana',
-                'email' => 'citra@gmail.com',
-                'nim' => '2108096002',
-                'prodi' => 'Komunikasi Penyiaran Islam',
-                'angkatan' => '2024',
-                'no_hp' => '082134567891',
-                'alamat' => 'Tambakaji, Ngaliyan, Semarang',
-                'pilihan' => 'Konten',
-                'status' => 'lolos',
-                'keputusan' => 'Konten',
-                'nilai_tugas' => ['K1' => 70, 'K2' => 80, 'K3' => 88],
-                'nilai_wawancara' => ['K4' => 72, 'K5' => 85, 'K7' => 78],
-                'presensi_hadir' => [true, true, true, true, true], // 5/5 hadir (100%)
-            ],
-            [
-                'name' => 'Diva Melati',
-                'email' => 'diva@gmail.com',
-                'nim' => '2108096003',
-                'prodi' => 'Jurnalistik Islam',
-                'angkatan' => '2024',
-                'no_hp' => '083134567892',
-                'alamat' => 'Beringin, Semarang Barat',
-                'pilihan' => 'Konten',
-                'status' => 'lolos',
-                'keputusan' => 'Konten',
-                'nilai_tugas' => ['K1' => 75, 'K2' => 82, 'K3' => 86],
-                'nilai_wawancara' => ['K4' => 74, 'K5' => 84, 'K7' => 80],
-                'presensi_hadir' => [true, true, true, true, true], // 5/5 hadir (100%)
-            ],
-            [
-                'name' => 'Ghea Kirana',
-                'email' => 'ghea@gmail.com',
-                'nim' => '2108096004',
-                'prodi' => 'Sastra Inggris',
-                'angkatan' => '2024',
-                'no_hp' => '085134567893',
-                'alamat' => 'Jerakah, Tugu, Semarang',
-                'pilihan' => 'Konten',
-                'status' => 'lolos',
-                'keputusan' => 'Konten',
-                'nilai_tugas' => ['K1' => 68, 'K2' => 76], // K3 tidak mengumpulkan (2/3 tugas)
-                'nilai_wawancara' => ['K4' => 70, 'K5' => 78, 'K7' => 76],
-                'presensi_hadir' => [true, true, true, false, true], // 4/5 hadir (80%) - Izin di Pra Workshop 2
-            ],
-            [
-                'name' => 'Budi Santoso',
-                'email' => 'budi@gmail.com',
-                'nim' => '2108096005',
-                'prodi' => 'Teknologi Informasi',
-                'angkatan' => '2024',
-                'no_hp' => '087134567894',
-                'alamat' => 'Sampangan, Gajahmungkur, Semarang',
-                'pilihan' => 'Redaksi',
-                'status' => 'menunggu',
-                'keputusan' => null,
-                'nilai_tugas' => ['K1' => 82, 'K2' => 78, 'K3' => 72],
-                'nilai_wawancara' => ['K4' => 80, 'K5' => 68, 'K7' => 75],
-                'presensi_hadir' => [true, false, true, true, true], // 4/5 hadir (80%) - Izin di Hunting Feature
-            ],
+        // 5. Penugasan Resmi (K1, K2, K3)
+        $tugas1 = Penugasan::create([
+            'kriteria_kode' => 'K1',
+            'jenis' => 'Tugas Kepenulisan (K1)',
+            'judul' => 'Tugas Menulis Berita Straight News',
+            'deskripsi' => 'Buatlah berita lempang (straight news) 300-500 kata mengenai dinamika perkuliahan/kampus. Penilaian berdasarkan struktur piramida terbalik, unsur 5W+1H, fakta akurat, bahasa jurnalistik baku, dan kejelasan informasi.',
+            'deadline' => Carbon::now()->subDays(4)->setTime(23, 59),
+            'dibuat_oleh' => $primaryAdminId,
+        ]);
+
+        $tugas2 = Penugasan::create([
+            'kriteria_kode' => 'K2',
+            'jenis' => 'Tugas Analisis Isu (K2)',
+            'judul' => 'Tugas Analisis Isu Jurnalistik',
+            'deskripsi' => 'Lakukan analisis isu problematika publik atau kebijakan kampus. Penilaian mencakup identifikasi akar masalah, relevansi topik, pemetaan dampak sosial, dan ketajaman sudut pandang liputan.',
+            'deadline' => Carbon::now()->subDays(3)->setTime(23, 59),
+            'dibuat_oleh' => $primaryAdminId,
+        ]);
+
+        $tugas3 = Penugasan::create([
+            'kriteria_kode' => 'K3',
+            'jenis' => 'Tugas Kreativitas (K3)',
+            'judul' => 'Tugas Desain Grafis & Fotografi Visual',
+            'deskripsi' => 'Rancang feed infografis Instagram atau ambil 2 foto jurnalistik bercerita (photo story). Penilaian berdasarkan orisinalitas ide, komposisi visual, estetika tata letak, dan kesesuaian konsep.',
+            'deadline' => Carbon::now()->subDays(1)->setTime(23, 59),
+            'dibuat_oleh' => $primaryAdminId,
+        ]);
+
+        $tugasMap = [
+            'K1' => $tugas1,
+            'K2' => $tugas2,
+            'K3' => $tugas3,
         ];
-
-        $userInstances = [];
-        foreach ($calonAnggotaData as $cad) {
-            $user = User::create([
-                'name' => $cad['name'],
-                'email' => $cad['email'],
-                'password' => Hash::make('password'),
-                'role' => 'calon_anggota',
-            ]);
-
-            $isLolos = ($cad['status'] ?? 'lolos') === 'lolos';
-            ProfilCalonAnggota::create([
-                'user_id' => $user->id,
-                'nim' => $cad['nim'],
-                'prodi' => $cad['prodi'],
-                'angkatan' => $cad['angkatan'],
-                'no_hp' => $cad['no_hp'],
-                'alamat' => $cad['alamat'],
-                'pilihan_divisi_awal' => $cad['pilihan'],
-                'seleksi_administrasi' => $isLolos ? 'lolos' : 'tidak_lolos',
-                'tes_tulis_wawancara' => $isLolos ? 'lolos' : 'tidak_lolos',
-                'cakruma' => $isLolos ? 'lolos' : 'tidak_lolos',
-                'keputusan_final' => $cad['keputusan'],
-            ]);
-
-            // Buat berkas default
-            $jenisBerkasList = [
-                'Curriculum Vitae (CV)' => 'cv_pendaftar.pdf',
-                'Pas Foto 3x4' => 'pas_foto_formal.pdf',
-                'Esai Alasan Memilih Amanat' => 'esai_motivasi.pdf',
-                'Karya Pribadi (Artikel/Opini/Sastra/Jurnalistik)' => 'portofolio_karya.pdf',
-            ];
-            foreach ($jenisBerkasList as $jenis => $filename) {
-                Berkas::create([
-                    'user_id' => $user->id,
-                    'jenis_berkas' => $jenis,
-                    'nama_file' => $filename,
-                    'file_path' => 'berkas/sample/' . $filename,
-                    'mime_type' => 'application/pdf',
-                    'ukuran_file' => 1024 * rand(300, 1500),
-                    'status' => 'diverifikasi',
-                    'catatan' => 'Berkas valid dan sesuai standar persyaratan SKM Amanat.',
-                ]);
-            }
-
-            // Simpan nilai wawancara (K4, K5, K7)
-            foreach ($cad['nilai_wawancara'] as $kode => $skor) {
-                NilaiEvaluasi::create([
-                    'user_id' => $user->id,
-                    'kriteria_id' => $kriteriaMap[$kode],
-                    'nilai_aktual' => $skor,
-                    'input_oleh' => $admin->id,
-                ]);
-            }
-
-            $userInstances[] = [
-                'user' => $user,
-                'data' => $cad,
-            ];
-        }
 
         // 6. Agenda Kegiatan (5 Kegiatan Resmi)
         $kegiatan1 = Kegiatan::create([
@@ -339,85 +274,316 @@ class DatabaseSeeder extends Seeder
 
         $kegiatansList = [$kegiatan1, $kegiatan2, $kegiatan3, $kegiatan4, $kegiatan5];
 
-        // Buat data presensi untuk setiap kegiatan
-        foreach ($userInstances as $item) {
-            $u = $item['user'];
-            $hadirArr = $item['data']['presensi_hadir'];
-
-            foreach ($kegiatansList as $idx => $keg) {
-                $isHadir = $hadirArr[$idx] ?? true;
-                if ($isHadir) {
-                    Presensi::create([
-                        'user_id' => $u->id,
-                        'kegiatan_id' => $keg->id,
-                        'waktu_hadir' => (clone $keg->tanggal_waktu)->subMinutes(rand(5, 20)),
-                        'status' => 'Hadir',
-                        'keterangan' => 'Hadir tepat waktu dan aktif berpartisipasi dalam agenda kegiatan.',
-                    ]);
-                } else {
-                    Presensi::create([
-                        'user_id' => $u->id,
-                        'kegiatan_id' => $keg->id,
-                        'waktu_hadir' => null,
-                        'status' => 'Izin',
-                        'keterangan' => 'Izin tidak dapat hadir karena agenda akademik mendesak / sakit terkonfirmasi.',
-                    ]);
-                }
-            }
-        }
-
-        // 7. Penugasan Sesuai Indikator (K1, K2, K3)
-        $tugas1 = Penugasan::create([
-            'kriteria_kode' => 'K1',
-            'jenis' => 'Tugas Kepenulisan (K1)',
-            'judul' => 'Tugas Menulis Berita Straight News',
-            'deskripsi' => 'Buatlah berita lempang (straight news) 300-500 kata mengenai dinamika perkuliahan/kampus. Penilaian berdasarkan struktur piramida terbalik, unsur 5W+1H, fakta akurat, bahasa jurnalistik baku, dan kejelasan informasi.',
-            'deadline' => Carbon::now()->subDays(4)->setTime(23, 59),
-            'dibuat_oleh' => $admin->id,
-        ]);
-
-        $tugas2 = Penugasan::create([
-            'kriteria_kode' => 'K2',
-            'jenis' => 'Tugas Analisis Isu (K2)',
-            'judul' => 'Tugas Analisis Isu Jurnalistik',
-            'deskripsi' => 'Lakukan analisis isu problematika publik atau kebijakan kampus. Penilaian mencakup identifikasi akar masalah, relevansi topik, pemetaan dampak sosial, dan ketajaman sudut pandang liputan.',
-            'deadline' => Carbon::now()->subDays(3)->setTime(23, 59),
-            'dibuat_oleh' => $admin->id,
-        ]);
-
-        $tugas3 = Penugasan::create([
-            'kriteria_kode' => 'K3',
-            'jenis' => 'Tugas Kreativitas (K3)',
-            'judul' => 'Tugas Desain Grafis & Fotografi Visual',
-            'deskripsi' => 'Rancang feed infografis Instagram atau ambil 2 foto jurnalistik bercerita (photo story). Penilaian berdasarkan orisinalitas ide, komposisi visual, estetika tata letak, dan kesesuaian konsep.',
-            'deadline' => Carbon::now()->subDays(1)->setTime(23, 59),
-            'dibuat_oleh' => $admin->id,
-        ]);
-
-        $tugasMap = [
-            'K1' => $tugas1,
-            'K2' => $tugas2,
-            'K3' => $tugas3,
+        // 7. Data 32 Calon Anggota & Nilai 7 Kriteria Sesuai Tabel
+        $calonAnggotaTable = [
+            [
+                'no' => 1,
+                'name' => 'Anisa Atun Maryam',
+                'email' => 'anisa.atunmaryam@gmail.com',
+                'prodi' => 'Psikologi',
+                'scores' => ['K1' => 86, 'K2' => 84, 'K3' => 82, 'K4' => 85, 'K5' => 78, 'K6' => 88, 'K7' => 87],
+            ],
+            [
+                'no' => 2,
+                'name' => 'Friciliya Lutfiah Z.L.',
+                'email' => 'friciliya.lutfiah@gmail.com',
+                'prodi' => 'Ilmu Politik',
+                'scores' => ['K1' => 80, 'K2' => 85, 'K3' => 78, 'K4' => 86, 'K5' => 76, 'K6' => 82, 'K7' => 81],
+            ],
+            [
+                'no' => 3,
+                'name' => 'Ahmad Dawud K.',
+                'email' => 'ahmad.dawudk@gmail.com',
+                'prodi' => 'Ilmu Hukum',
+                'scores' => ['K1' => 78, 'K2' => 82, 'K3' => 76, 'K4' => 84, 'K5' => 75, 'K6' => 80, 'K7' => 79],
+            ],
+            [
+                'no' => 4,
+                'name' => 'Muhammad Wildan S.',
+                'email' => 'm.wildans@gmail.com',
+                'prodi' => 'Ilmu Hukum',
+                'scores' => ['K1' => 79, 'K2' => 83, 'K3' => 77, 'K4' => 84, 'K5' => 76, 'K6' => 81, 'K7' => 80],
+            ],
+            [
+                'no' => 5,
+                'name' => 'Evelyn Atha Nasywa',
+                'email' => 'evelyn.athanasywa@gmail.com',
+                'prodi' => 'Psikologi',
+                'scores' => ['K1' => 85, 'K2' => 84, 'K3' => 86, 'K4' => 83, 'K5' => 80, 'K6' => 87, 'K7' => 88],
+            ],
+            [
+                'no' => 6,
+                'name' => 'Firman Ade Rizqi P.',
+                'email' => 'firman.aderizqi@gmail.com',
+                'prodi' => 'Pendidikan Bahasa Inggris',
+                'scores' => ['K1' => 82, 'K2' => 78, 'K3' => 80, 'K4' => 79, 'K5' => 83, 'K6' => 81, 'K7' => 80],
+            ],
+            [
+                'no' => 7,
+                'name' => 'Dina Uzma Azizah',
+                'email' => 'dina.uzmaazizah@gmail.com',
+                'prodi' => 'Ilmu Politik',
+                'scores' => ['K1' => 81, 'K2' => 86, 'K3' => 79, 'K4' => 85, 'K5' => 77, 'K6' => 82, 'K7' => 83],
+            ],
+            [
+                'no' => 8,
+                'name' => 'David Setiawan',
+                'email' => 'david.setiawan99@gmail.com',
+                'prodi' => 'Hukum Pidana Islam',
+                'scores' => ['K1' => 80, 'K2' => 82, 'K3' => 78, 'K4' => 83, 'K5' => 79, 'K6' => 84, 'K7' => 82],
+            ],
+            [
+                'no' => 9,
+                'name' => 'Moh. Asrori Abdul G.',
+                'email' => 'moh.asroriabdul@gmail.com',
+                'prodi' => 'Komunikasi dan Penyiaran Islam',
+                'scores' => ['K1' => 84, 'K2' => 85, 'K3' => 83, 'K4' => 84, 'K5' => 86, 'K6' => 82, 'K7' => 85],
+            ],
+            [
+                'no' => 10,
+                'name' => 'Fatih Rizqan',
+                'email' => 'fatih.rizqan@gmail.com',
+                'prodi' => 'Ilmu Al-Qur\'an dan Tafsir',
+                'scores' => ['K1' => 79, 'K2' => 81, 'K3' => 77, 'K4' => 82, 'K5' => 76, 'K6' => 83, 'K7' => 80],
+            ],
+            [
+                'no' => 11,
+                'name' => 'Auliya Najwa H.',
+                'email' => 'auliya.najwah@gmail.com',
+                'prodi' => 'Gizi',
+                'scores' => ['K1' => 77, 'K2' => 78, 'K3' => 80, 'K4' => 79, 'K5' => 75, 'K6' => 82, 'K7' => 81],
+            ],
+            [
+                'no' => 12,
+                'name' => 'Kaisa Ayyu Fida',
+                'email' => 'kaisa.ayyufida@gmail.com',
+                'prodi' => 'Ilmu Politik',
+                'scores' => ['K1' => 80, 'K2' => 84, 'K3' => 81, 'K4' => 85, 'K5' => 78, 'K6' => 81, 'K7' => 82],
+            ],
+            [
+                'no' => 13,
+                'name' => 'Safinatul Mahsunah',
+                'email' => 'safinatul.mahsunah@gmail.com',
+                'prodi' => 'Ilmu Al-Qur\'an dan Tafsir',
+                'scores' => ['K1' => 83, 'K2' => 82, 'K3' => 79, 'K4' => 84, 'K5' => 77, 'K6' => 86, 'K7' => 85],
+            ],
+            [
+                'no' => 14,
+                'name' => 'Oktavia Suci R.',
+                'email' => 'oktavia.sucir@gmail.com',
+                'prodi' => 'Manajemen',
+                'scores' => ['K1' => 78, 'K2' => 79, 'K3' => 82, 'K4' => 80, 'K5' => 81, 'K6' => 83, 'K7' => 82],
+            ],
+            [
+                'no' => 15,
+                'name' => 'Farah Cahyani Putri',
+                'email' => 'farah.cahyaniputri@gmail.com',
+                'prodi' => 'Teknik Lingkungan',
+                'scores' => ['K1' => 76, 'K2' => 80, 'K3' => 81, 'K4' => 79, 'K5' => 75, 'K6' => 82, 'K7' => 80],
+            ],
+            [
+                'no' => 16,
+                'name' => 'Muhammad Farrel A.S.',
+                'email' => 'farrel.muhammadas@gmail.com',
+                'prodi' => 'Teknologi Informasi',
+                'scores' => ['K1' => 80, 'K2' => 78, 'K3' => 85, 'K4' => 77, 'K5' => 76, 'K6' => 83, 'K7' => 81],
+            ],
+            [
+                'no' => 17,
+                'name' => 'Putri Natasya I.',
+                'email' => 'putri.natasyai@gmail.com',
+                'prodi' => 'PAI',
+                'scores' => ['K1' => 81, 'K2' => 80, 'K3' => 78, 'K4' => 82, 'K5' => 77, 'K6' => 84, 'K7' => 83],
+            ],
+            [
+                'no' => 18,
+                'name' => 'Adhilni Mizaniyatul I.',
+                'email' => 'adhilni.mizaniyatul@gmail.com',
+                'prodi' => 'Pendidikan Agama Islam',
+                'scores' => ['K1' => 82, 'K2' => 81, 'K3' => 79, 'K4' => 83, 'K5' => 78, 'K6' => 85, 'K7' => 84],
+            ],
+            [
+                'no' => 19,
+                'name' => 'Fa\'iq Muhammad S.',
+                'email' => 'faiq.muhammads@gmail.com',
+                'prodi' => 'Teknologi Informasi',
+                'scores' => ['K1' => 79, 'K2' => 78, 'K3' => 84, 'K4' => 77, 'K5' => 76, 'K6' => 82, 'K7' => 80],
+            ],
+            [
+                'no' => 20,
+                'name' => 'Ahmad Rafiuddin Izza',
+                'email' => 'ahmad.rafiuddinizza@gmail.com',
+                'prodi' => 'Psikologi',
+                'scores' => ['K1' => 84, 'K2' => 83, 'K3' => 82, 'K4' => 85, 'K5' => 79, 'K6' => 86, 'K7' => 87],
+            ],
+            [
+                'no' => 21,
+                'name' => 'Kholifatim Muallimah',
+                'email' => 'kholifatim.muallimah@gmail.com',
+                'prodi' => 'Pendidikan Bahasa Inggris',
+                'scores' => ['K1' => 83, 'K2' => 79, 'K3' => 80, 'K4' => 80, 'K5' => 84, 'K6' => 82, 'K7' => 81],
+            ],
+            [
+                'no' => 22,
+                'name' => 'Defina Indriani',
+                'email' => 'defina.indriani@gmail.com',
+                'prodi' => 'Teknologi Informasi',
+                'scores' => ['K1' => 78, 'K2' => 77, 'K3' => 83, 'K4' => 76, 'K5' => 75, 'K6' => 81, 'K7' => 80],
+            ],
+            [
+                'no' => 23,
+                'name' => 'Nugrahenning Catur W.',
+                'email' => 'nugrahenning.caturw@gmail.com',
+                'prodi' => 'Akuntansi Syariah',
+                'scores' => ['K1' => 80, 'K2' => 79, 'K3' => 81, 'K4' => 80, 'K5' => 78, 'K6' => 85, 'K7' => 82],
+            ],
+            [
+                'no' => 24,
+                'name' => 'Rosyidah Atiqoh',
+                'email' => 'rosyidah.atiqoh@gmail.com',
+                'prodi' => 'Psikologi',
+                'scores' => ['K1' => 82, 'K2' => 81, 'K3' => 80, 'K4' => 83, 'K5' => 77, 'K6' => 84, 'K7' => 86],
+            ],
+            [
+                'no' => 25,
+                'name' => 'Oryza Rahma Dalila',
+                'email' => 'oryza.rahmadalila@gmail.com',
+                'prodi' => 'Komunikasi dan Penyiaran Islam',
+                'scores' => ['K1' => 83, 'K2' => 84, 'K3' => 85, 'K4' => 82, 'K5' => 86, 'K6' => 81, 'K7' => 84],
+            ],
+            [
+                'no' => 26,
+                'name' => 'Afrizal Anwar Zulfani',
+                'email' => 'afrizal.anwarzulfani@gmail.com',
+                'prodi' => 'Teknologi Informasi',
+                'scores' => ['K1' => 77, 'K2' => 76, 'K3' => 82, 'K4' => 75, 'K5' => 74, 'K6' => 80, 'K7' => 79],
+            ],
+            [
+                'no' => 27,
+                'name' => 'Okta Rosi Sal\'wa',
+                'email' => 'okta.rosisalwa@gmail.com',
+                'prodi' => 'Teknik Lingkungan',
+                'scores' => ['K1' => 76, 'K2' => 79, 'K3' => 80, 'K4' => 78, 'K5' => 75, 'K6' => 81, 'K7' => 80],
+            ],
+            [
+                'no' => 28,
+                'name' => 'Matsna Adilya R.',
+                'email' => 'matsna.adilyar@gmail.com',
+                'prodi' => 'Pendidikan Biologi',
+                'scores' => ['K1' => 79, 'K2' => 80, 'K3' => 81, 'K4' => 82, 'K5' => 76, 'K6' => 83, 'K7' => 82],
+            ],
+            [
+                'no' => 29,
+                'name' => 'Noor Saidah',
+                'email' => 'noor.saidah@gmail.com',
+                'prodi' => 'Manajemen',
+                'scores' => ['K1' => 78, 'K2' => 79, 'K3' => 82, 'K4' => 80, 'K5' => 79, 'K6' => 84, 'K7' => 81],
+            ],
+            [
+                'no' => 30,
+                'name' => 'Fadhil Fatin Ramadhan',
+                'email' => 'fadhil.fatinramadhan@gmail.com',
+                'prodi' => 'Hukum Keluarga Islam',
+                'scores' => ['K1' => 80, 'K2' => 82, 'K3' => 77, 'K4' => 83, 'K5' => 76, 'K6' => 82, 'K7' => 80],
+            ],
+            [
+                'no' => 31,
+                'name' => 'Muhammad Maulana',
+                'email' => 'muhammad.maulana.arch@gmail.com',
+                'prodi' => 'Arsitektur',
+                'scores' => ['K1' => 77, 'K2' => 78, 'K3' => 84, 'K4' => 79, 'K5' => 75, 'K6' => 81, 'K7' => 80],
+            ],
+            [
+                'no' => 32,
+                'name' => 'Nur Rofiqoh Nabila',
+                'email' => 'nur.rofiqohnabila@gmail.com',
+                'prodi' => 'Teknologi Informasi',
+                'scores' => ['K1' => 79, 'K2' => 78, 'K3' => 83, 'K4' => 77, 'K5' => 76, 'K6' => 82, 'K7' => 81],
+            ],
         ];
 
-        // Pengumpulan Tugas & Penilaian untuk setiap calon anggota
-        foreach ($userInstances as $item) {
-            $u = $item['user'];
-            $nilaiTugas = $item['data']['nilai_tugas'];
+        $cities = ['Ngaliyan, Kota Semarang', 'Tembalang, Kota Semarang', 'Gunungpati, Kota Semarang', 'Banyumanik, Kota Semarang', 'Pedurungan, Kota Semarang', 'Mijen, Kota Semarang', 'Tugu, Kota Semarang'];
 
-            foreach ($nilaiTugas as $kode => $score) {
+        foreach ($calonAnggotaTable as $idx => $row) {
+            $user = User::create([
+                'name' => $row['name'],
+                'email' => $row['email'],
+                'password' => Hash::make('password'),
+                'role' => 'calon_anggota',
+            ]);
+
+            $nim = '2408096' . str_pad($row['no'], 3, '0', STR_PAD_LEFT);
+            $pilihan = ($row['scores']['K1'] >= $row['scores']['K3']) ? 'Redaksi' : 'Konten';
+
+            ProfilCalonAnggota::create([
+                'user_id' => $user->id,
+                'nim' => $nim,
+                'prodi' => $row['prodi'],
+                'angkatan' => '2024',
+                'no_hp' => '08' . rand(1111111111, 9999999999),
+                'alamat' => $cities[$idx % count($cities)],
+                'pilihan_divisi_awal' => $pilihan,
+                'seleksi_administrasi' => 'lolos',
+                'tes_tulis_wawancara' => 'lolos',
+                'cakruma' => 'lolos',
+                'keputusan_final' => null, // akan ditentukan via rekomendasi PM
+            ]);
+
+            // Buat berkas terverifikasi default
+            $jenisBerkasList = [
+                'Curriculum Vitae (CV)' => 'cv_pendaftar.pdf',
+                'Pas Foto 3x4' => 'pas_foto_formal.pdf',
+                'Esai Alasan Memilih Amanat' => 'esai_motivasi.pdf',
+                'Karya Pribadi (Artikel/Opini/Sastra/Jurnalistik)' => 'portofolio_karya.pdf',
+            ];
+            foreach ($jenisBerkasList as $jenis => $filename) {
+                Berkas::create([
+                    'user_id' => $user->id,
+                    'jenis_berkas' => $jenis,
+                    'nama_file' => $filename,
+                    'file_path' => 'berkas/sample/' . $filename,
+                    'mime_type' => 'application/pdf',
+                    'ukuran_file' => 1024 * rand(300, 1500),
+                    'status' => 'diverifikasi',
+                    'catatan' => 'Berkas valid dan sesuai standar persyaratan SKM Amanat.',
+                ]);
+            }
+
+            // Simpan seluruh 7 Nilai Evaluasi (K1 s.d. K7) langsung sesuai tabel gambar
+            foreach ($row['scores'] as $kode => $skor) {
+                NilaiEvaluasi::create([
+                    'user_id' => $user->id,
+                    'kriteria_id' => $kriteriaMap[$kode],
+                    'nilai_aktual' => $skor,
+                    'input_oleh' => $primaryAdminId,
+                ]);
+            }
+
+            // Buat pengumpulan tugas (K1, K2, K3) dengan nilai sesuai tabel
+            foreach (['K1', 'K2', 'K3'] as $kode) {
                 $penugasanObj = $tugasMap[$kode];
                 PengumpulanTugas::create([
                     'penugasan_id' => $penugasanObj->id,
-                    'user_id' => $u->id,
-                    'nama_file' => $kode . '_' . str_replace(' ', '_', $u->name) . '.pdf',
+                    'user_id' => $user->id,
+                    'nama_file' => $kode . '_' . str_replace([' ', '\'', '.'], '_', $user->name) . '.pdf',
                     'file_path' => 'penugasan/sample/' . strtolower($kode) . '_sample.pdf',
                     'mime_type' => 'application/pdf',
                     'ukuran_file' => 1024 * rand(400, 1200),
                     'status' => 'dinilai',
-                    'nilai' => $score,
+                    'nilai' => $row['scores'][$kode],
                     'feedback' => 'Hasil penugasan sangat baik dan telah memenuhi parameter indikator ' . $kode . '.',
                     'submitted_at' => Carbon::now()->subDays(rand(2, 5))->setTime(rand(14, 21), rand(10, 50)),
+                ]);
+            }
+
+            // Buat presensi untuk 5 kegiatan (default Hadir)
+            foreach ($kegiatansList as $keg) {
+                Presensi::create([
+                    'user_id' => $user->id,
+                    'kegiatan_id' => $keg->id,
+                    'waktu_hadir' => (clone $keg->tanggal_waktu)->subMinutes(rand(5, 20)),
+                    'status' => 'Hadir',
+                    'keterangan' => 'Hadir tepat waktu dan aktif berpartisipasi dalam agenda kegiatan.',
                 ]);
             }
         }
@@ -428,7 +594,7 @@ class DatabaseSeeder extends Seeder
             'target_audience' => 'semua',
             'isi' => "Assalamu'alaikum Wr. Wb.\n\nSelamat kepada seluruh Calon Kru Magang SKM Amanat periode 2026 yang telah dinyatakan lolos verifikasi administrasi dan kelengkapan dokumen. Tahapan berikutnya adalah Pelatihan Kepenulisan dan Tes Tertulis yang akan diselenggarakan sesuai jadwal tertera di agenda kegiatan.\n\nHarap mempersiapkan diri dengan baik dan senantiasa memantau menu Penugasan serta Presensi di portal ini.\n\nWassalamu'alaikum Wr. Wb.",
             'penulis' => 'HRD SKM Amanat',
-            'dibuat_oleh' => $admin->id,
+            'dibuat_oleh' => $primaryAdminId,
         ]);
 
         Pengumuman::create([
@@ -436,7 +602,7 @@ class DatabaseSeeder extends Seeder
             'target_audience' => 'calon_anggota',
             'isi' => "Diberitahukan kepada seluruh Calon Anggota bahwa sesi tes wawancara akan fokus pada penggalian wawasan sosial, public speaking, serta psikotes karakteristik. Harap membawa alat tulis dan hadir 15 menit sebelum jadwal sesi dimulai.",
             'penulis' => 'BPH SKM Amanat',
-            'dibuat_oleh' => $admin->id,
+            'dibuat_oleh' => $primaryAdminId,
         ]);
 
         Pengumuman::create([
@@ -444,16 +610,11 @@ class DatabaseSeeder extends Seeder
             'target_audience' => 'semua',
             'isi' => "Workshop spesialisasi visual akan dilaksanakan akhir pekan ini dengan narasumber praktisi fotografer media nasional. Seluruh kru magang diwajibkan mengikutinya sebagai bekal penugasan liputan lapangan.",
             'penulis' => 'Redaktur Foto & Desain',
-            'dibuat_oleh' => $admin->id,
+            'dibuat_oleh' => $primaryAdminId,
         ]);
 
-        // 9. Jalankan Sinkronisasi Otomatis Seluruh Nilai Evaluasi (K1, K2, K3, K6: 60% Tugas + 40% Absensi)
-        $evalService = new EvaluasiNilaiService();
-        $evalService->syncAllScores($admin->id);
-
-        // 10. Jalankan Kalkulasi Profile Matching Awal
+        // 9. Jalankan Kalkulasi Profile Matching & Ranking untuk seluruh 32 Calon Anggota
         $pmService = new ProfileMatchingService();
         $pmService->calculateAndRankAll();
     }
 }
-
