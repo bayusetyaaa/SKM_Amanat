@@ -60,21 +60,21 @@ class DatabaseSeeder extends Seeder
 
         $adminAlfarizy = User::create([
             'name' => 'Moehammad Alfarizy',
-            'email' => 'moehammad.alfarizy@amanat.id',
+            'email' => 'moehammad.alfarizy@gmail.com',
             'password' => Hash::make('alfarizy2026!'),
             'role' => 'admin',
         ]);
 
         $adminMeyra = User::create([
             'name' => 'Meyra Karunia Putri',
-            'email' => 'meyra.karuniaputri@amanat.id',
+            'email' => 'meyra.karuniaputri@gmail.com',
             'password' => Hash::make('meyra2026!'),
             'role' => 'admin',
         ]);
 
         $adminLutfi = User::create([
             'name' => 'Lutfi Ardiansyah',
-            'email' => 'lutfi.ardiansyah@amanat.id',
+            'email' => 'lutfi.ardiansyah@gmail.com',
             'password' => Hash::make('lutfi2026!'),
             'role' => 'admin',
         ]);
@@ -279,7 +279,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 1,
                 'name' => 'Anisa Atun Maryam',
-                'email' => 'anisatunmaryam@example.com',
+                'email' => 'anisatunmaryam@gmail.com',
                 'password' => 'Anisa@4721',
                 'prodi' => 'Psikologi',
                 'scores' => ['K1' => 86, 'K2' => 84, 'K3' => 82, 'K4' => 85, 'K5' => 78, 'K6' => 88, 'K7' => 87],
@@ -287,7 +287,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 2,
                 'name' => 'Friciliya Lutfiah Z.L.',
-                'email' => 'fricilutfia27@example.com',
+                'email' => 'fricilutfia27@gmail.com',
                 'password' => 'Fricil!839',
                 'prodi' => 'Ilmu Politik',
                 'scores' => ['K1' => 80, 'K2' => 85, 'K3' => 78, 'K4' => 86, 'K5' => 76, 'K6' => 82, 'K7' => 81],
@@ -295,7 +295,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 3,
                 'name' => 'Ahmad Dawud K.',
-                'email' => 'dawud.kay@example.com',
+                'email' => 'dawud.kay@gmail.com',
                 'password' => 'Dawud#2517',
                 'prodi' => 'Ilmu Hukum',
                 'scores' => ['K1' => 78, 'K2' => 82, 'K3' => 76, 'K4' => 84, 'K5' => 75, 'K6' => 80, 'K7' => 79],
@@ -303,7 +303,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 4,
                 'name' => 'Muhammad Wildan S.',
-                'email' => 'wildanstory@example.com',
+                'email' => 'wildanstory@gmail.com',
                 'password' => 'Wildan@904',
                 'prodi' => 'Ilmu Hukum',
                 'scores' => ['K1' => 79, 'K2' => 83, 'K3' => 77, 'K4' => 84, 'K5' => 76, 'K6' => 81, 'K7' => 80],
@@ -311,7 +311,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 5,
                 'name' => 'Evelyn Atha Nasywa',
-                'email' => 'evelynatha08@example.com',
+                'email' => 'evelynatha08@gmail.com',
                 'password' => 'Evelyn!6321',
                 'prodi' => 'Psikologi',
                 'scores' => ['K1' => 85, 'K2' => 84, 'K3' => 86, 'K4' => 83, 'K5' => 80, 'K6' => 87, 'K7' => 88],
@@ -319,7 +319,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 6,
                 'name' => 'Firman Ade Rizqi P.',
-                'email' => 'firmanaderp@example.com',
+                'email' => 'firmanaderp@gmail.com',
                 'password' => 'Firman#781',
                 'prodi' => 'Pendidikan Bahasa Inggris',
                 'scores' => ['K1' => 82, 'K2' => 78, 'K3' => 80, 'K4' => 79, 'K5' => 83, 'K6' => 81, 'K7' => 80],
@@ -327,7 +327,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 7,
                 'name' => 'Dina Uzma Azizah',
-                'email' => 'dinauzma@example.com',
+                'email' => 'dinauzma@gmail.com',
                 'password' => 'Dina@3482',
                 'prodi' => 'Ilmu Politik',
                 'scores' => ['K1' => 81, 'K2' => 86, 'K3' => 79, 'K4' => 85, 'K5' => 77, 'K6' => 82, 'K7' => 83],
@@ -335,7 +335,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 8,
                 'name' => 'David Setiawan',
-                'email' => 'davidsetiawan17@example.com',
+                'email' => 'davidsetiawan17@gmail.com',
                 'password' => 'David!5290',
                 'prodi' => 'Hukum Pidana Islam',
                 'scores' => ['K1' => 80, 'K2' => 82, 'K3' => 78, 'K4' => 83, 'K5' => 79, 'K6' => 84, 'K7' => 82],
@@ -343,7 +343,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 9,
                 'name' => 'Moh. Asrori Abdul G.',
-                'email' => 'asroriabdulg@example.com',
+                'email' => 'asroriabdulg@gmail.com',
                 'password' => 'Asrori#617',
                 'prodi' => 'Komunikasi dan Penyiaran Islam',
                 'scores' => ['K1' => 84, 'K2' => 85, 'K3' => 83, 'K4' => 84, 'K5' => 86, 'K6' => 82, 'K7' => 85],
@@ -351,7 +351,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 10,
                 'name' => 'Fatih Rizqan',
-                'email' => 'fatih.rizqan@example.com',
+                'email' => 'fatih.rizqan@gmail.com',
                 'password' => 'Fatih@8352',
                 'prodi' => 'Ilmu Al-Qur\'an dan Tafsir',
                 'scores' => ['K1' => 79, 'K2' => 81, 'K3' => 77, 'K4' => 82, 'K5' => 76, 'K6' => 83, 'K7' => 80],
@@ -359,7 +359,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 11,
                 'name' => 'Auliya Najwa H.',
-                'email' => 'auliyanajwa23@example.com',
+                'email' => 'auliyanajwa23@gmail.com',
                 'password' => 'Auliya!471',
                 'prodi' => 'Gizi',
                 'scores' => ['K1' => 77, 'K2' => 78, 'K3' => 80, 'K4' => 79, 'K5' => 75, 'K6' => 82, 'K7' => 81],
@@ -367,7 +367,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 12,
                 'name' => 'Kaisa Ayyu Fida',
-                'email' => 'kaisaayyu@example.com',
+                'email' => 'kaisaayyu@gmail.com',
                 'password' => 'Kaisa#2904',
                 'prodi' => 'Ilmu Politik',
                 'scores' => ['K1' => 80, 'K2' => 84, 'K3' => 81, 'K4' => 85, 'K5' => 78, 'K6' => 81, 'K7' => 82],
@@ -375,7 +375,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 13,
                 'name' => 'Safinatul Mahsunah',
-                'email' => 'safinamhsn99@example.com',
+                'email' => 'safinamhsn99@gmail.com',
                 'password' => 'Safina@7316',
                 'prodi' => 'Ilmu Al-Qur\'an dan Tafsir',
                 'scores' => ['K1' => 83, 'K2' => 82, 'K3' => 79, 'K4' => 84, 'K5' => 77, 'K6' => 86, 'K7' => 85],
@@ -383,7 +383,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 14,
                 'name' => 'Oktavia Suci R.',
-                'email' => 'oktasucii@example.com',
+                'email' => 'oktasucii@gmail.com',
                 'password' => 'Okta!582',
                 'prodi' => 'Manajemen',
                 'scores' => ['K1' => 78, 'K2' => 79, 'K3' => 82, 'K4' => 80, 'K5' => 81, 'K6' => 83, 'K7' => 82],
@@ -391,7 +391,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 15,
                 'name' => 'Farah Cahyani Putri',
-                'email' => 'farahcahyani12@example.com',
+                'email' => 'farahcahyani12@gmail.com',
                 'password' => 'Farah#9461',
                 'prodi' => 'Teknik Lingkungan',
                 'scores' => ['K1' => 76, 'K2' => 80, 'K3' => 81, 'K4' => 79, 'K5' => 75, 'K6' => 82, 'K7' => 80],
@@ -399,7 +399,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 16,
                 'name' => 'Muhammad Farrel A.S.',
-                'email' => 'farrelas_25@example.com',
+                'email' => 'farrelas_25@gmail.com',
                 'password' => 'Farrel@3078',
                 'prodi' => 'Teknologi Informasi',
                 'scores' => ['K1' => 80, 'K2' => 78, 'K3' => 85, 'K4' => 77, 'K5' => 76, 'K6' => 83, 'K7' => 81],
@@ -407,7 +407,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 17,
                 'name' => 'Putri Natasya I.',
-                'email' => 'putrinatasy@example.com',
+                'email' => 'putrinatasy@gmail.com',
                 'password' => 'Putri!6249',
                 'prodi' => 'PAI',
                 'scores' => ['K1' => 81, 'K2' => 80, 'K3' => 78, 'K4' => 82, 'K5' => 77, 'K6' => 84, 'K7' => 83],
@@ -415,7 +415,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 18,
                 'name' => 'Adhilni Mizaniyatul I.',
-                'email' => 'adhilnimiza07@example.com',
+                'email' => 'adhilnimiza07@gmail.com',
                 'password' => 'Adhilni#813',
                 'prodi' => 'Pendidikan Agama Islam',
                 'scores' => ['K1' => 82, 'K2' => 81, 'K3' => 79, 'K4' => 83, 'K5' => 78, 'K6' => 85, 'K7' => 84],
@@ -423,7 +423,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 19,
                 'name' => 'Fa\'iq Muhammad S.',
-                'email' => 'faiqmuhammad@example.com',
+                'email' => 'faiqmuhammad@gmail.com',
                 'password' => 'Faiq@4592',
                 'prodi' => 'Teknologi Informasi',
                 'scores' => ['K1' => 79, 'K2' => 78, 'K3' => 84, 'K4' => 77, 'K5' => 76, 'K6' => 82, 'K7' => 80],
@@ -431,7 +431,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 20,
                 'name' => 'Ahmad Rafiuddin Izza',
-                'email' => 'rafiuddin.izza21@example.com',
+                'email' => 'rafiuddin.izza21@gmail.com',
                 'password' => 'Rafi#7604',
                 'prodi' => 'Psikologi',
                 'scores' => ['K1' => 84, 'K2' => 83, 'K3' => 82, 'K4' => 85, 'K5' => 79, 'K6' => 86, 'K7' => 87],
@@ -439,7 +439,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 21,
                 'name' => 'Kholifatim Muallimah',
-                'email' => 'kholifatim@example.com',
+                'email' => 'kholifatim@gmail.com',
                 'password' => 'Kholi!318',
                 'prodi' => 'Pendidikan Bahasa Inggris',
                 'scores' => ['K1' => 83, 'K2' => 79, 'K3' => 80, 'K4' => 80, 'K5' => 84, 'K6' => 82, 'K7' => 81],
@@ -447,7 +447,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 22,
                 'name' => 'Defina Indriani',
-                'email' => 'definaindri@example.com',
+                'email' => 'definaindri@gmail.com',
                 'password' => 'Defina@8475',
                 'prodi' => 'Teknologi Informasi',
                 'scores' => ['K1' => 78, 'K2' => 77, 'K3' => 83, 'K4' => 76, 'K5' => 75, 'K6' => 81, 'K7' => 80],
@@ -455,7 +455,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 23,
                 'name' => 'Nugrahenning Catur W.',
-                'email' => 'nugrahenningcw16@example.com',
+                'email' => 'nugrahenningcw16@gmail.com',
                 'password' => 'Nuning#592',
                 'prodi' => 'Akuntansi Syariah',
                 'scores' => ['K1' => 80, 'K2' => 79, 'K3' => 81, 'K4' => 80, 'K5' => 78, 'K6' => 85, 'K7' => 82],
@@ -463,7 +463,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 24,
                 'name' => 'Rosyidah Atiqoh',
-                'email' => 'rosyidahatiqoh@example.com',
+                'email' => 'rosyidahatiqoh@gmail.com',
                 'password' => 'Rosy!7041',
                 'prodi' => 'Psikologi',
                 'scores' => ['K1' => 82, 'K2' => 81, 'K3' => 80, 'K4' => 83, 'K5' => 77, 'K6' => 84, 'K7' => 86],
@@ -471,7 +471,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 25,
                 'name' => 'Oryza Rahma Dalila',
-                'email' => 'oryzarahma22@example.com',
+                'email' => 'oryzarahma22@gmail.com',
                 'password' => 'Oryza@681',
                 'prodi' => 'Komunikasi dan Penyiaran Islam',
                 'scores' => ['K1' => 83, 'K2' => 84, 'K3' => 85, 'K4' => 82, 'K5' => 86, 'K6' => 81, 'K7' => 84],
@@ -479,7 +479,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 26,
                 'name' => 'Afrizal Anwar Zulfani',
-                'email' => 'afrizzulfani@example.com',
+                'email' => 'afrizzulfani@gmail.com',
                 'password' => 'Afrizal#9357',
                 'prodi' => 'Teknologi Informasi',
                 'scores' => ['K1' => 77, 'K2' => 76, 'K3' => 82, 'K4' => 75, 'K5' => 74, 'K6' => 80, 'K7' => 79],
@@ -487,7 +487,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 27,
                 'name' => 'Okta Rosi Sal\'wa',
-                'email' => 'oktarosi14@example.com',
+                'email' => 'oktarosi14@gmail.com',
                 'password' => 'OktaRosi!426',
                 'prodi' => 'Teknik Lingkungan',
                 'scores' => ['K1' => 76, 'K2' => 79, 'K3' => 80, 'K4' => 78, 'K5' => 75, 'K6' => 81, 'K7' => 80],
@@ -495,7 +495,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 28,
                 'name' => 'Matsna Adilya R.',
-                'email' => 'matsnaadilya@example.com',
+                'email' => 'matsnaadilya@gmail.com',
                 'password' => 'Matsna@8193',
                 'prodi' => 'Pendidikan Biologi',
                 'scores' => ['K1' => 79, 'K2' => 80, 'K3' => 81, 'K4' => 82, 'K5' => 76, 'K6' => 83, 'K7' => 82],
@@ -503,7 +503,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 29,
                 'name' => 'Noor Saidah',
-                'email' => 'noorsaidah27@example.com',
+                'email' => 'noorsaidah27@gmail.com',
                 'password' => 'Noor#573',
                 'prodi' => 'Manajemen',
                 'scores' => ['K1' => 78, 'K2' => 79, 'K3' => 82, 'K4' => 80, 'K5' => 79, 'K6' => 84, 'K7' => 81],
@@ -511,7 +511,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 30,
                 'name' => 'Fadhil Fatin Ramadhan',
-                'email' => 'fadhilfatin@example.com',
+                'email' => 'fadhilfatin@gmail.com',
                 'password' => 'Fadhil!2468',
                 'prodi' => 'Hukum Keluarga Islam',
                 'scores' => ['K1' => 80, 'K2' => 82, 'K3' => 77, 'K4' => 83, 'K5' => 76, 'K6' => 82, 'K7' => 80],
@@ -519,7 +519,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 31,
                 'name' => 'Muhammad Maulana',
-                'email' => 'maulanamhd19@example.com',
+                'email' => 'maulanamhd19@gmail.com',
                 'password' => 'Maulana@735',
                 'prodi' => 'Arsitektur',
                 'scores' => ['K1' => 77, 'K2' => 78, 'K3' => 84, 'K4' => 79, 'K5' => 75, 'K6' => 81, 'K7' => 80],
@@ -527,7 +527,7 @@ class DatabaseSeeder extends Seeder
             [
                 'no' => 32,
                 'name' => 'Nur Rofiqoh Nabila',
-                'email' => 'nurrofqoh@example.com',
+                'email' => 'nurrofqoh@gmail.com',
                 'password' => 'Rofiqoh#4816',
                 'prodi' => 'Teknologi Informasi',
                 'scores' => ['K1' => 79, 'K2' => 78, 'K3' => 83, 'K4' => 77, 'K5' => 76, 'K6' => 82, 'K7' => 81],
