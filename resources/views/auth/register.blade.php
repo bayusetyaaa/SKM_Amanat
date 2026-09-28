@@ -139,24 +139,24 @@
                 <div class="col-sm-6">
                   <label class="form-label fw-semibold text-heading" for="password">Kata Sandi <span
                       class="text-danger">*</span></label>
-                  <div class="input-group input-group-merge">
+                  <div class="input-group input-group-merge form-password-toggle">
                     <span class="input-group-text"><i class="bx bx-lock-alt"></i></span>
                     <input type="password" id="password" class="form-control" name="password"
                       placeholder="Min. 6 karakter" required />
-                    <span class="input-group-text cursor-pointer" onclick="togglePasswordVisibility('password', this)" role="button" aria-label="Tampilkan atau sembunyikan kata sandi" style="user-select: none;">
-                      <i id="iconPass1" class="bx bx-hide"></i>
+                    <span class="input-group-text cursor-pointer" role="button" aria-label="Tampilkan atau sembunyikan kata sandi" style="user-select: none;">
+                      <i class="bx bx-hide"></i>
                     </span>
                   </div>
                 </div>
                 <div class="col-sm-6">
                   <label class="form-label fw-semibold text-heading" for="password_confirmation">Ulangi Sandi <span
                       class="text-danger">*</span></label>
-                  <div class="input-group input-group-merge">
+                  <div class="input-group input-group-merge form-password-toggle">
                     <span class="input-group-text"><i class="bx bx-check-shield"></i></span>
                     <input type="password" id="password_confirmation" class="form-control"
                       name="password_confirmation" placeholder="Ulangi kata sandi" required />
-                    <span class="input-group-text cursor-pointer" onclick="togglePasswordVisibility('password_confirmation', this)" role="button" aria-label="Tampilkan atau sembunyikan konfirmasi kata sandi" style="user-select: none;">
-                      <i id="iconPass2" class="bx bx-hide"></i>
+                    <span class="input-group-text cursor-pointer" role="button" aria-label="Tampilkan atau sembunyikan konfirmasi kata sandi" style="user-select: none;">
+                      <i class="bx bx-hide"></i>
                     </span>
                   </div>
                 </div>

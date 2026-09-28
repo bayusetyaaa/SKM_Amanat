@@ -114,12 +114,12 @@
                     Lupa sandi?
                   </a>
                 </div>
-                <div class="input-group input-group-merge">
+                <div class="input-group input-group-merge form-password-toggle">
                   <span class="input-group-text"><i class="bx bx-lock-alt"></i></span>
                   <input type="password" id="password" class="form-control" name="password" placeholder="············"
                     required />
-                  <span class="input-group-text cursor-pointer" onclick="togglePasswordVisibility('password', this)" role="button" aria-label="Tampilkan atau sembunyikan kata sandi" style="user-select: none;">
-                    <i id="togglePassIcon" class="bx bx-hide"></i>
+                  <span class="input-group-text cursor-pointer" role="button" aria-label="Tampilkan atau sembunyikan kata sandi" style="user-select: none;">
+                    <i class="bx bx-hide"></i>
                   </span>
                 </div>
               </div>
