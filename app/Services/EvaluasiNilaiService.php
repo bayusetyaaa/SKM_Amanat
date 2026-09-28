@@ -19,7 +19,7 @@ class EvaluasiNilaiService
      */
     public function syncUserScores(User $user, $adminId = null)
     {
-        $adminId = $adminId ?? Auth::id() ?? 1;
+        $adminId = $adminId ?? Auth::id() ?? User::where('role', 'admin')->value('id');
         $kriterias = Kriteria::all()->keyBy('kode');
 
         $allPenugasans = Penugasan::all();

@@ -138,12 +138,29 @@ class PresensiController extends Controller
 
         $kegiatan = Kegiatan::findOrFail($kegiatanId);
 
+        // Validasi jendela waktu — tidak bisa izin/sakit sebelum atau sesudah kegiatan
+        $now = Carbon::now();
+        if ($kegiatan->tanggal_waktu && $now->lt($kegiatan->tanggal_waktu)) {
+            return back()->with('error', 'Kegiatan belum dimulai. Pengajuan Izin/Sakit dibuka mulai pukul ' . $kegiatan->tanggal_waktu->format('H:i') . ' WIB.');
+        }
+        if ($kegiatan->tanggal_waktu_selesai && $now->gt($kegiatan->tanggal_waktu_selesai)) {
+            return back()->with('error', 'Batas waktu pengajuan Izin/Sakit telah berakhir pada pukul ' . $kegiatan->tanggal_waktu_selesai->format('H:i') . ' WIB. Tidak dapat lagi mengajukan permohonan.');
+        }
+
+        // Cek apakah sudah pernah presensi Hadir — tidak bisa diganti dengan Izin/Sakit
+        $existing = Presensi::where('user_id', $user->id)
+            ->where('kegiatan_id', $kegiatan->id)
+            ->first();
+        if ($existing && $existing->status === 'Hadir') {
+            return back()->with('info', 'Anda sudah tercatat Hadir pada kegiatan ini. Tidak perlu mengajukan Izin/Sakit.');
+        }
+
         Presensi::updateOrCreate(
             ['user_id' => $user->id, 'kegiatan_id' => $kegiatan->id],
             [
                 'waktu_hadir' => Carbon::now(),
-                'status' => $request->status,
-                'keterangan' => $request->keterangan,
+                'status'      => $request->status,
+                'keterangan'  => $request->keterangan,
             ]
         );
 
