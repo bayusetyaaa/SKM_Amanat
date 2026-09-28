@@ -159,33 +159,4 @@
     </div>
 </div>
 
-@push('page-scripts')
-<script>
-    function setupPasswordToggle(buttonId, inputId, iconId) {
-        const btn = document.getElementById(buttonId);
-        const input = document.getElementById(inputId);
-        const icon = document.getElementById(iconId);
-
-        if (btn && input && icon) {
-            btn.addEventListener('click', function (e) {
-                e.preventDefault();
-                if (input.type === 'password') {
-                    input.type = 'text';
-                    icon.classList.remove('bx-hide');
-                    icon.classList.add('bx-show');
-                } else {
-                    input.type = 'password';
-                    icon.classList.remove('bx-show');
-                    icon.classList.add('bx-hide');
-                }
-            });
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        setupPasswordToggle('btnToggleResetPass', 'password', 'togglePassIcon');
-        setupPasswordToggle('btnToggleResetConfirmPass', 'password_confirmation', 'toggleConfirmPassIcon');
-    });
-</script>
-@endpush
 @endsection

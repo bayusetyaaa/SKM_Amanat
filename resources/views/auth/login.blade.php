@@ -153,27 +153,6 @@
 
   @push('page-scripts')
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        const btnToggle = document.getElementById('btnTogglePassword');
-        const passInput = document.getElementById('password');
-        const passIcon = document.getElementById('togglePassIcon');
-
-        if (btnToggle && passInput && passIcon) {
-          btnToggle.addEventListener('click', function (e) {
-            e.preventDefault();
-            if (passInput.type === 'password') {
-              passInput.type = 'text';
-              passIcon.classList.remove('bx-hide');
-              passIcon.classList.add('bx-show');
-            } else {
-              passInput.type = 'password';
-              passIcon.classList.remove('bx-show');
-              passIcon.classList.add('bx-hide');
-            }
-          });
-        }
-      });
-
       function fillCredentials(email, password) {
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');

@@ -76,21 +76,27 @@
 
     <script>
         window.togglePasswordVisibility = function (inputId, btnEl) {
-            var input = document.getElementById(inputId);
+            if (window.event) {
+                window.event.preventDefault();
+                window.event.stopPropagation();
+            }
+            var input = typeof inputId === 'string' ? document.getElementById(inputId) : inputId;
             if (!input) return;
 
             var icon = btnEl ? (btnEl.tagName && btnEl.tagName.toLowerCase() === 'i' ? btnEl : btnEl.querySelector('i')) : null;
-            if (!icon) {
-                icon = document.querySelector('[onclick*="' + inputId + '"] i') || document.getElementById('togglePassIcon');
+            if (!icon && btnEl) {
+                icon = btnEl.querySelector('.bx');
             }
 
             if (input.type === 'password') {
+                input.setAttribute('type', 'text');
                 input.type = 'text';
                 if (icon) {
                     icon.classList.remove('bx-hide');
                     icon.classList.add('bx-show');
                 }
             } else {
+                input.setAttribute('type', 'password');
                 input.type = 'password';
                 if (icon) {
                     icon.classList.remove('bx-show');
