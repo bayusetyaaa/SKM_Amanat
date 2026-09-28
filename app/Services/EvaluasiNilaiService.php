@@ -125,7 +125,8 @@ class EvaluasiNilaiService
                     })
                     ->count();
 
-                $poinAbsensi = ($totalHadir * 1.0) + ($totalIzinSakit * 0.75);
+                // Hadir = 1.0 poin, Izin/Sakit = 0.5 poin (setengah dari Hadir)
+                $poinAbsensi = ($totalHadir * 1.0) + ($totalIzinSakit * 0.5);
                 $skorAbsensi = min(100, ($poinAbsensi / $totalKegiatan) * 100);
             } else {
                 $skorAbsensi = 100;

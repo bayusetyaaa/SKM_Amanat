@@ -64,17 +64,25 @@ class DashboardController extends Controller
             ->count();
 
 
-        $cakrumaTerbaru = User::where('role', 'calon_anggota')
+        // Semua calon anggota beserta rekomendasi divisi, diurutkan berdasarkan nilai PM tertinggi
+        $semuaAnggota = User::where('role', 'calon_anggota')
             ->with(['profil', 'berkas', 'hasilProfileMatching.divisi'])
-            ->orderByDesc('created_at')
-            ->take(5)
-            ->get();
+            ->get()
+            ->sortByDesc(function ($user) {
+                $rec = $user->hasilProfileMatching->firstWhere('rekomendasi', true);
+                return $rec ? $rec->nilai_total : -1;
+            })
+            ->values();
+
+        // Tetap kirim 5 terbaru untuk widget ringkasan (opsional, bisa dihapus)
+        $cakrumaTerbaru = $semuaAnggota->take(5);
 
         return view('admin.dashboard', compact(
             'totalPendaftar',
             'totalCakrumaAktif',
             'countRedaksi',
             'countKonten',
+            'semuaAnggota',
             'cakrumaTerbaru'
         ));
     }
