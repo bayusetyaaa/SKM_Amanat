@@ -160,13 +160,16 @@
                           $admStatus === 'lolos' && $tesStatus === 'lolos' && $cakStatus === 'lolos' && !$hasRejected;
 
                       $rec = $ca->hasilProfileMatching->firstWhere('rekomendasi', true);
+                      $divisiAkhir = in_array($ca->profil->keputusan_final ?? '', ['Redaksi', 'Konten'])
+                          ? $ca->profil->keputusan_final
+                          : ($rec->divisi->nama ?? null);
                     @endphp
                     @if (!$isLolosSemua)
                       <span class="badge bg-label-secondary text-muted" title="Belum lolos semua tahapan seleksi">Belum
                         Memenuhi Syarat</span>
-                    @elseif($rec)
-                      <span class="badge {{ $rec->divisi->nama === 'Redaksi' ? 'bg-label-success' : 'bg-label-info' }}">
-                        {{ $rec->divisi->nama }} ({{ number_format($rec->nilai_total, 2) }})
+                    @elseif($divisiAkhir)
+                      <span class="badge {{ $divisiAkhir === 'Redaksi' ? 'bg-label-success' : 'bg-label-info' }}">
+                        {{ $divisiAkhir }} @if($rec) ({{ number_format($rec->nilai_total, 2) }}) @endif
                       </span>
                     @else
                       <span class="badge bg-label-warning">Belum dihitung</span>

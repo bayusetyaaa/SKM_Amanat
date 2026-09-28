@@ -28,40 +28,34 @@ class DashboardController extends Controller
             })
             ->count();
 
-        // Rekomendasi Redaksi & Konten (HANYA dari anggota yang LOLOS seluruh tahapan seleksi)
-        $countRedaksi = HasilProfileMatching::rekomendasi()
-            ->whereHas('divisi', function ($q) {
-                $q->where('nama', 'Redaksi');
+        // Rekomendasi Redaksi & Konten sesuai dengan Divisi Akhir anggota (Keputusan Final atau Rekomendasi PM)
+        $calonLolos = User::where('role', 'calon_anggota')
+            ->whereHas('profil', function ($q) {
+                $q->where('seleksi_administrasi', 'lolos')
+                  ->where('tes_tulis_wawancara', 'lolos')
+                  ->where('cakruma', 'lolos');
             })
-            ->whereHas('user', function ($qu) {
-                $qu->where('role', 'calon_anggota')
-                   ->whereHas('profil', function ($qp) {
-                       $qp->where('seleksi_administrasi', 'lolos')
-                          ->where('tes_tulis_wawancara', 'lolos')
-                          ->where('cakruma', 'lolos');
-                   })
-                   ->whereDoesntHave('berkas', function ($qb) {
-                       $qb->where('status', 'ditolak');
-                   });
+            ->whereDoesntHave('berkas', function ($q) {
+                $q->where('status', 'ditolak');
             })
-            ->count();
+            ->with(['profil', 'hasilProfileMatching.divisi'])
+            ->get();
 
-        $countKonten = HasilProfileMatching::rekomendasi()
-            ->whereHas('divisi', function ($q) {
-                $q->where('nama', 'Konten');
-            })
-            ->whereHas('user', function ($qu) {
-                $qu->where('role', 'calon_anggota')
-                   ->whereHas('profil', function ($qp) {
-                       $qp->where('seleksi_administrasi', 'lolos')
-                          ->where('tes_tulis_wawancara', 'lolos')
-                          ->where('cakruma', 'lolos');
-                   })
-                   ->whereDoesntHave('berkas', function ($qb) {
-                       $qb->where('status', 'ditolak');
-                   });
-            })
-            ->count();
+        $countRedaksi = 0;
+        $countKonten = 0;
+
+        foreach ($calonLolos as $u) {
+            $recPm = $u->hasilProfileMatching->firstWhere('rekomendasi', true)?->divisi?->nama;
+            $divisiAkhir = in_array($u->profil->keputusan_final ?? '', ['Redaksi', 'Konten'])
+                ? $u->profil->keputusan_final
+                : $recPm;
+
+            if ($divisiAkhir === 'Redaksi') {
+                $countRedaksi++;
+            } elseif ($divisiAkhir === 'Konten') {
+                $countKonten++;
+            }
+        }
 
 
         $cakrumaTerbaru = User::where('role', 'calon_anggota')
