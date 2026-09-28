@@ -90,17 +90,23 @@ class ProfileMatchingService
             }
         }
 
+        // Reset semua rekomendasi user ini ke false terlebih dahulu
+        // agar tidak ada duplikat rekomendasi=true di lebih dari satu divisi
+        HasilProfileMatching::where('user_id', $userId)
+            ->whereRaw('"rekomendasi" = true')
+            ->update(['rekomendasi' => \Illuminate\Support\Facades\DB::raw('false')]);
+
         // Simpan atau update ke database tabel hasil_profile_matching
         foreach ($results as $divisiId => $res) {
             $isRecommended = ($divisiId === $recommendedDivisiId);
             HasilProfileMatching::updateOrCreate(
                 [
-                    'user_id' => $userId,
+                    'user_id'   => $userId,
                     'divisi_id' => $divisiId,
                 ],
                 [
-                    'ncf' => $res['ncf'],
-                    'nsf' => $res['nsf'],
+                    'ncf'         => $res['ncf'],
+                    'nsf'         => $res['nsf'],
                     'nilai_total' => $res['nilai_total'],
                     'rekomendasi' => \Illuminate\Support\Facades\DB::raw($isRecommended ? 'true' : 'false'),
                 ]
