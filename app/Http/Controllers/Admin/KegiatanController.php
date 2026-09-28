@@ -13,9 +13,17 @@ class KegiatanController extends Controller
 {
     public function index()
     {
-        $kegiatans = Kegiatan::withCount(['presensi' => function ($q) {
-            $q->where('status', 'Hadir');
-        }])->orderByDesc('tanggal_waktu')->paginate(10)->withQueryString();
+        $kegiatans = Kegiatan::withCount([
+            'presensi as hadir_count' => function ($q) {
+                $q->where('status', 'Hadir');
+            },
+            'presensi as izin_count' => function ($q) {
+                $q->where('status', 'Izin');
+            },
+            'presensi as sakit_count' => function ($q) {
+                $q->where('status', 'Sakit');
+            },
+        ])->orderByDesc('tanggal_waktu')->paginate(10)->withQueryString();
 
         $totalCakruma = User::where('role', 'calon_anggota')->count();
 
@@ -30,6 +38,9 @@ class KegiatanController extends Controller
             'tempat' => 'nullable|string|max:150',
             'deskripsi' => 'nullable|string',
             'tanggal_waktu' => 'required|date',
+            'tanggal_waktu_selesai' => 'nullable|date|after:tanggal_waktu',
+        ], [
+            'tanggal_waktu_selesai.after' => 'Waktu selesai presensi/kegiatan harus setelah waktu mulai.',
         ]);
 
         Kegiatan::create($validated);
@@ -58,7 +69,7 @@ class KegiatanController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'status' => 'required|in:Hadir,Izin,Tidak Hadir',
+            'status' => 'required|in:Hadir,Izin,Sakit,Tidak Hadir',
             'keterangan' => 'nullable|string|max:255',
         ]);
 
@@ -73,7 +84,7 @@ class KegiatanController extends Controller
                 ['kegiatan_id' => $kegiatan->id, 'user_id' => $request->user_id],
                 [
                     'status' => $request->status,
-                    'waktu_hadir' => $request->status === 'Hadir' ? Carbon::now() : null,
+                    'waktu_hadir' => Carbon::now(),
                     'keterangan' => $request->keterangan ?? ('Presensi dicatat oleh admin (' . $request->status . ')'),
                 ]
             );

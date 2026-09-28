@@ -20,7 +20,16 @@
             <div class="card-body">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
                     <div>
-                        <span class="badge bg-label-primary mb-2">{{ $kegiatan->jenis }}</span>
+                        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                            <span class="badge bg-label-primary">{{ $kegiatan->jenis }}</span>
+                            @if($kegiatan->isPresensiOpen())
+                                <span class="badge bg-label-success"><i class="bx bx-radio-circle-marked me-1"></i> Presensi Buka</span>
+                            @elseif($kegiatan->tanggal_waktu && now()->lt($kegiatan->tanggal_waktu))
+                                <span class="badge bg-label-warning">Belum Buka</span>
+                            @else
+                                <span class="badge bg-label-secondary">Presensi Tutup</span>
+                            @endif
+                        </div>
                         <h4 class="card-title fw-bold text-heading mb-1">{{ $kegiatan->nama }}</h4>
                     </div>
                     <!-- Token Presensi Box -->
@@ -40,11 +49,45 @@
 
                 <div class="d-flex flex-wrap gap-4 text-muted small mb-3">
                     <span><i class="bx bx-map me-1 text-primary"></i> Tempat: <strong>{{ $kegiatan->tempat ?? 'Sekretariat SKM Amanat' }}</strong></span>
-                    <span><i class="bx bx-calendar me-1 text-primary"></i> Waktu: <strong>{{ $kegiatan->tanggal_waktu->translatedFormat('l, d F Y - H:i') }} WIB</strong></span>
-                    <span><i class="bx bx-user-check me-1 text-success"></i> Kehadiran: <strong>{{ $kegiatan->presensi->count() }} / {{ $users->count() }} Anggota</strong></span>
+                    <span><i class="bx bx-time me-1 text-primary"></i> Waktu Pelaksanaan: <strong>{{ $kegiatan->waktu_formatted }}</strong></span>
                 </div>
+
+                <!-- Summary Bar Presensi -->
+                @php
+                    $countHadir = $kegiatan->presensi->where('status', 'Hadir')->count();
+                    $countIzin = $kegiatan->presensi->where('status', 'Izin')->count();
+                    $countSakit = $kegiatan->presensi->where('status', 'Sakit')->count();
+                    $countBelum = max(0, $users->count() - $kegiatan->presensi->count());
+                @endphp
+                <div class="row g-2 pt-2 border-top">
+                    <div class="col-6 col-sm-3">
+                        <div class="p-2 rounded bg-lighter text-center border">
+                            <small class="text-muted d-block">Hadir</small>
+                            <strong class="text-success fs-5">{{ $countHadir }}</strong>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-3">
+                        <div class="p-2 rounded bg-lighter text-center border">
+                            <small class="text-muted d-block">Izin</small>
+                            <strong class="text-warning fs-5">{{ $countIzin }}</strong>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-3">
+                        <div class="p-2 rounded bg-lighter text-center border">
+                            <small class="text-muted d-block">Sakit</small>
+                            <strong class="text-info fs-5">{{ $countSakit }}</strong>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-3">
+                        <div class="p-2 rounded bg-lighter text-center border">
+                            <small class="text-muted d-block">Belum Presensi</small>
+                            <strong class="text-secondary fs-5">{{ $countBelum }}</strong>
+                        </div>
+                    </div>
+                </div>
+
                 @if($kegiatan->deskripsi)
-                    <div class="p-3 bg-lighter rounded small border">
+                    <div class="p-3 bg-lighter rounded small border mt-3">
                         <strong>Deskripsi / Catatan Agenda:</strong><br>
                         {{ $kegiatan->deskripsi }}
                     </div>
@@ -104,6 +147,10 @@
                                             <span class="badge bg-label-warning">
                                                 <i class="bx bx-time-five me-1"></i> Izin
                                             </span>
+                                        @elseif($p->status === 'Sakit')
+                                            <span class="badge bg-label-info">
+                                                <i class="bx bx-plus-medical me-1"></i> Sakit
+                                            </span>
                                         @else
                                             <span class="badge bg-label-danger">
                                                 <i class="bx bx-x me-1"></i> {{ ucfirst($p->status) }}
@@ -111,7 +158,7 @@
                                         @endif
                                     @else
                                         <span class="badge bg-label-secondary">
-                                            Belum Hadir
+                                            Belum Presensi
                                         </span>
                                     @endif
                                 </td>
@@ -135,6 +182,12 @@
                                                 <input type="hidden" name="user_id" value="{{ $u->id }}">
                                                 <input type="hidden" name="status" value="Izin">
                                                 <button type="submit" class="dropdown-item text-warning"><i class="bx bx-time-five me-1"></i> Tandai Izin</button>
+                                            </form>
+                                            <form action="{{ route('admin.kegiatan.presensi', $kegiatan->id) }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="user_id" value="{{ $u->id }}">
+                                                <input type="hidden" name="status" value="Sakit">
+                                                <button type="submit" class="dropdown-item text-info"><i class="bx bx-plus-medical me-1"></i> Tandai Sakit</button>
                                             </form>
                                             @if($p)
                                             <div class="dropdown-divider"></div>

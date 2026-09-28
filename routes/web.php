@@ -118,6 +118,7 @@ Route::middleware(['auth', 'role:calon_anggota'])->prefix('member')->name('membe
     // Presensi Kegiatan
     Route::get('/presensi', [MemberPresensiController::class, 'index'])->name('presensi');
     Route::post('/presensi/{kegiatanId}', [MemberPresensiController::class, 'submitPresensi'])->name('presensi.submit');
+    Route::post('/presensi/{kegiatanId}/izin-sakit', [MemberPresensiController::class, 'submitIzinSakit'])->name('presensi.izin-sakit');
     
     // Magang Spesialis / Peminatan Divisi
     Route::get('/magang-spesialis', [MemberMagangSpesialisController::class, 'index'])->name('magang-spesialis');

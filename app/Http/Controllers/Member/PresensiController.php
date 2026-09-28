@@ -78,6 +78,15 @@ class PresensiController extends Controller
 
         $kegiatan = Kegiatan::findOrFail($kegiatanId);
 
+        // Validasi jendela waktu presensi
+        $now = Carbon::now();
+        if ($kegiatan->tanggal_waktu && $now->lt($kegiatan->tanggal_waktu)) {
+            return back()->with('error', 'Presensi belum dibuka. Kegiatan dijadwalkan mulai pukul ' . $kegiatan->tanggal_waktu->format('H:i') . ' WIB.');
+        }
+        if ($kegiatan->tanggal_waktu_selesai && $now->gt($kegiatan->tanggal_waktu_selesai)) {
+            return back()->with('error', 'Batas waktu presensi telah berakhir pada pukul ' . $kegiatan->tanggal_waktu_selesai->format('H:i') . ' WIB.');
+        }
+
         // Validasi kecocokan token presensi
         if (strtoupper(trim($request->token_presensi)) !== strtoupper(trim($kegiatan->token_presensi))) {
             return back()->with('error', 'Token presensi salah! Silakan periksa kembali token kegiatan dari panitia/pengurus.');
@@ -87,17 +96,18 @@ class PresensiController extends Controller
             ->where('kegiatan_id', $kegiatan->id)
             ->first();
 
-        if ($existing) {
-            return back()->with('info', 'Anda sudah melakukan presensi untuk kegiatan ini.');
+        if ($existing && $existing->status === 'Hadir') {
+            return back()->with('info', 'Anda sudah melakukan presensi Hadir untuk kegiatan ini.');
         }
 
-        Presensi::create([
-            'user_id' => $user->id,
-            'kegiatan_id' => $kegiatan->id,
-            'waktu_hadir' => Carbon::now(),
-            'status' => 'Hadir',
-            'keterangan' => 'Presensi mandiri via token web SKM Amanat',
-        ]);
+        Presensi::updateOrCreate(
+            ['user_id' => $user->id, 'kegiatan_id' => $kegiatan->id],
+            [
+                'waktu_hadir' => Carbon::now(),
+                'status' => 'Hadir',
+                'keterangan' => 'Presensi mandiri via token web SKM Amanat',
+            ]
+        );
 
         $evalService = new \App\Services\EvaluasiNilaiService();
         $evalService->syncUserScores($user);
@@ -106,5 +116,43 @@ class PresensiController extends Controller
         $pmService->calculateAndRankAll();
 
         return back()->with('success', 'Presensi berhasil dicatat! Kehadiran Anda telah terverifikasi dengan token.');
+    }
+
+    public function submitIzinSakit(Request $request, $kegiatanId)
+    {
+        $user = Auth::user();
+
+        if (!$this->checkIsNotTidakLolos($user)) {
+            return redirect()->route('member.dashboard')
+                ->with('error', 'Akses Ditolak: Anda tidak dapat mengajukan izin/sakit.');
+        }
+
+        $request->validate([
+            'status' => 'required|in:Izin,Sakit',
+            'keterangan' => 'required|string|min:3|max:500',
+        ], [
+            'status.required' => 'Pilih jenis permohonan (Izin atau Sakit).',
+            'keterangan.required' => 'Mohon sertakan alasan / keterangan izin atau sakit.',
+            'keterangan.min' => 'Keterangan minimal 3 karakter.',
+        ]);
+
+        $kegiatan = Kegiatan::findOrFail($kegiatanId);
+
+        Presensi::updateOrCreate(
+            ['user_id' => $user->id, 'kegiatan_id' => $kegiatan->id],
+            [
+                'waktu_hadir' => Carbon::now(),
+                'status' => $request->status,
+                'keterangan' => $request->keterangan,
+            ]
+        );
+
+        $evalService = new \App\Services\EvaluasiNilaiService();
+        $evalService->syncUserScores($user);
+
+        $pmService = new \App\Services\ProfileMatchingService();
+        $pmService->calculateAndRankAll();
+
+        return back()->with('success', "Permohonan {$request->status} berhasil diajukan dan dicatat ke dalam sistem.");
     }
 }

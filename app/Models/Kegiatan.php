@@ -17,6 +17,7 @@ class Kegiatan extends Model
         'tempat',
         'deskripsi',
         'tanggal_waktu',
+        'tanggal_waktu_selesai',
         'token_presensi',
     ];
 
@@ -47,7 +48,38 @@ class Kegiatan extends Model
 
     protected $casts = [
         'tanggal_waktu' => 'datetime',
+        'tanggal_waktu_selesai' => 'datetime',
     ];
+
+    public function getWaktuFormattedAttribute(): string
+    {
+        $start = $this->tanggal_waktu;
+        $end = $this->tanggal_waktu_selesai;
+
+        if (!$start) return '-';
+
+        if (!$end) {
+            return $start->translatedFormat('l, d F Y - H:i') . ' WIB';
+        }
+
+        if ($start->isSameDay($end)) {
+            return $start->translatedFormat('l, d F Y') . ' (' . $start->format('H:i') . ' - ' . $end->format('H:i') . ' WIB)';
+        }
+
+        return $start->translatedFormat('d M Y, H:i') . ' s/d ' . $end->translatedFormat('d M Y, H:i') . ' WIB';
+    }
+
+    public function isPresensiOpen(): bool
+    {
+        $now = \Carbon\Carbon::now();
+        if ($this->tanggal_waktu && $now->lt($this->tanggal_waktu)) {
+            return false;
+        }
+        if ($this->tanggal_waktu_selesai && $now->gt($this->tanggal_waktu_selesai)) {
+            return false;
+        }
+        return true;
+    }
 
     public function presensi()
     {

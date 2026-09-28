@@ -117,7 +117,16 @@ class EvaluasiNilaiService
                         $q->where('tanggal_waktu', '<=', Carbon::now());
                     })
                     ->count();
-                $skorAbsensi = min(100, ($totalHadir / $totalKegiatan) * 100);
+
+                $totalIzinSakit = Presensi::where('user_id', $user->id)
+                    ->whereIn('status', ['Izin', 'Sakit'])
+                    ->whereHas('kegiatan', function ($q) {
+                        $q->where('tanggal_waktu', '<=', Carbon::now());
+                    })
+                    ->count();
+
+                $poinAbsensi = ($totalHadir * 1.0) + ($totalIzinSakit * 0.75);
+                $skorAbsensi = min(100, ($poinAbsensi / $totalKegiatan) * 100);
             } else {
                 $skorAbsensi = 100;
             }

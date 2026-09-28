@@ -39,9 +39,16 @@
                         <input type="text" name="tempat" placeholder="Contoh: Sekretariat SKM Amanat / Zoom" class="form-control">
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Tanggal & Waktu Pelaksanaan <span class="text-danger">*</span></label>
-                        <input type="datetime-local" name="tanggal_waktu" required class="form-control">
+                    <div class="row g-2 mb-3">
+                        <div class="col-sm-6">
+                            <label class="form-label fw-semibold">Tanggal & Jam Mulai <span class="text-danger">*</span></label>
+                            <input type="datetime-local" name="tanggal_waktu" required class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label fw-semibold">Batas Waktu Selesai</label>
+                            <input type="datetime-local" name="tanggal_waktu_selesai" class="form-control" title="Batas akhir waktu presensi dibuka">
+                            <small class="text-muted" style="font-size: 0.75rem;">Opsional (Batas presensi)</small>
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -66,7 +73,7 @@
                 <h5 class="card-title mb-0 fw-bold text-heading">
                     <i class="bx bx-list-ul text-primary me-2"></i> Daftar Kegiatan & Presensi
                 </h5>
-                <span class="badge bg-label-primary">{{ $kegiatans->count() }} Kegiatan</span>
+                <span class="badge bg-label-primary">{{ $kegiatans->total() }} Kegiatan</span>
             </div>
             <div class="card-body pt-4">
                 <div class="d-flex flex-column gap-3">
@@ -80,12 +87,25 @@
                                             <span class="badge bg-label-dark font-monospace fw-bold px-2 py-1" title="Token Presensi Anggota">
                                                 <i class="bx bx-key me-1 text-primary"></i> Token: <strong>{{ $kegiatan->token_presensi }}</strong>
                                             </span>
+                                            @if($kegiatan->isPresensiOpen())
+                                                <span class="badge bg-label-success"><i class="bx bx-radio-circle-marked me-1"></i> Presensi Buka</span>
+                                            @elseif($kegiatan->tanggal_waktu && now()->lt($kegiatan->tanggal_waktu))
+                                                <span class="badge bg-label-warning">Belum Buka</span>
+                                            @else
+                                                <span class="badge bg-label-secondary">Presensi Tutup</span>
+                                            @endif
                                         </div>
                                         <h6 class="mb-1 fw-bold text-heading">{{ $kegiatan->nama }}</h6>
-                                        <div class="small text-muted d-flex flex-wrap gap-3 mt-2">
-                                            <span><i class="bx bx-time me-1"></i> {{ $kegiatan->tanggal_waktu->translatedFormat('d M Y, H:i') }} WIB</span>
+                                        <div class="small text-muted d-flex flex-wrap gap-2 mt-2">
+                                            <span><i class="bx bx-time me-1"></i> {{ $kegiatan->waktu_formatted }}</span>
+                                            <span>&bull;</span>
                                             <span><i class="bx bx-map me-1"></i> {{ $kegiatan->tempat ?? 'Sekretariat' }}</span>
-                                            <span class="text-success fw-semibold"><i class="bx bx-user-check me-1"></i> Hadir: {{ $kegiatan->presensi_count }} / {{ $totalCakruma }}</span>
+                                        </div>
+                                        <div class="d-flex flex-wrap gap-2 mt-2 pt-2 border-top">
+                                            <span class="badge bg-label-success fw-semibold"><i class="bx bx-user-check me-1"></i> Hadir: {{ $kegiatan->hadir_count ?? 0 }}</span>
+                                            <span class="badge bg-label-warning fw-semibold"><i class="bx bx-time-five me-1"></i> Izin: {{ $kegiatan->izin_count ?? 0 }}</span>
+                                            <span class="badge bg-label-info fw-semibold"><i class="bx bx-plus-medical me-1"></i> Sakit: {{ $kegiatan->sakit_count ?? 0 }}</span>
+                                            <span class="badge bg-label-secondary"><i class="bx bx-group me-1"></i> Total: {{ $totalCakruma }} Cakruma</span>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-center gap-1 mt-2 mt-sm-0">

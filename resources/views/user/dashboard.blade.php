@@ -238,23 +238,44 @@
                     <div class="card-body pt-4">
                         @if($kegiatanTerdekat)
                             <div class="card bg-lighter border shadow-none p-3 mb-0">
-                                <span class="badge bg-label-secondary mb-1 w-auto d-inline-block">{{ $kegiatanTerdekat->jenis }}</span>
+                                <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                                    <span class="badge bg-label-secondary">{{ $kegiatanTerdekat->jenis }}</span>
+                                    @if($kegiatanTerdekat->isPresensiOpen())
+                                        <span class="badge bg-label-success" style="font-size: 0.65rem;"><i class="bx bx-radio-circle-marked me-1"></i> Buka</span>
+                                    @elseif($kegiatanTerdekat->tanggal_waktu && now()->lt($kegiatanTerdekat->tanggal_waktu))
+                                        <span class="badge bg-label-warning" style="font-size: 0.65rem;">Belum Buka</span>
+                                    @else
+                                        <span class="badge bg-label-secondary" style="font-size: 0.65rem;">Tutup</span>
+                                    @endif
+                                </div>
                                 <h6 class="fw-bold text-heading mb-1">{{ $kegiatanTerdekat->nama }}</h6>
                                 <div class="small text-muted mb-3">
-                                    <div><i class="bx bx-time me-1"></i> {{ $kegiatanTerdekat->tanggal_waktu->translatedFormat('l, d F Y - H:i') }} WIB</div>
-                                    <div><i class="bx bx-map me-1"></i> {{ $kegiatanTerdekat->tempat ?? 'Sekretariat SKM Amanat' }}</div>
+                                    <div><i class="bx bx-time me-1 text-primary"></i> {{ $kegiatanTerdekat->waktu_formatted }}</div>
+                                    <div><i class="bx bx-map me-1 text-primary"></i> {{ $kegiatanTerdekat->tempat ?? 'Sekretariat SKM Amanat' }}</div>
                                 </div>
 
                                 <div>
                                     @if($presensiHariIni)
-                                        <div class="alert alert-success py-2 px-3 mb-0 d-flex align-items-center gap-2">
-                                            <i class="bx bx-check-circle fs-5"></i>
-                                            <span class="small fw-bold">Sudah Presensi ({{ $presensiHariIni->waktu_hadir->format('H:i') }} WIB)</span>
-                                        </div>
+                                        @if($presensiHariIni->status === 'Hadir')
+                                            <div class="alert alert-success py-2 px-3 mb-0 d-flex align-items-center gap-2">
+                                                <i class="bx bx-check-circle fs-5"></i>
+                                                <span class="small fw-bold">Sudah Hadir ({{ $presensiHariIni->waktu_hadir ? $presensiHariIni->waktu_hadir->format('H:i') . ' WIB' : '-' }})</span>
+                                            </div>
+                                        @elseif($presensiHariIni->status === 'Izin')
+                                            <div class="alert alert-warning py-2 px-3 mb-0 d-flex align-items-center gap-2">
+                                                <i class="bx bx-time-five fs-5"></i>
+                                                <span class="small fw-bold">Permohonan Izin Tercatat</span>
+                                            </div>
+                                        @elseif($presensiHariIni->status === 'Sakit')
+                                            <div class="alert alert-info py-2 px-3 mb-0 d-flex align-items-center gap-2">
+                                                <i class="bx bx-plus-medical fs-5"></i>
+                                                <span class="small fw-bold">Keterangan Sakit Tercatat</span>
+                                            </div>
+                                        @endif
                                     @else
                                         <form action="{{ route('member.presensi.submit', $kegiatanTerdekat->id) }}" method="POST">
                                             @csrf
-                                            <div class="input-group input-group-merge">
+                                            <div class="input-group input-group-merge mb-2">
                                                 <span class="input-group-text"><i class="bx bx-key"></i></span>
                                                 <input type="text" name="token_presensi" class="form-control text-uppercase fw-bold" placeholder="Token Presensi" required maxlength="10" autocomplete="off">
                                                 <button type="submit" class="btn btn-primary fw-bold">
@@ -262,6 +283,11 @@
                                                 </button>
                                             </div>
                                         </form>
+                                        <div class="d-flex justify-content-between align-items-center pt-1">
+                                            <a href="{{ route('member.presensi') }}" class="small text-warning fw-semibold">
+                                                <i class="bx bx-envelope me-1"></i> Ajukan Izin / Sakit &rarr;
+                                            </a>
+                                        </div>
                                     @endif
                                 </div>
                             </div>
