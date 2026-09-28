@@ -107,7 +107,7 @@
               </div>
 
               <!-- Password Input -->
-              <div class="mb-3 form-password-toggle">
+              <div class="mb-3">
                 <div class="d-flex justify-content-between align-items-center mb-1">
                   <label class="form-label fw-semibold text-heading mb-0" for="password">Kata Sandi</label>
                   <a href="{{ route('forgot-password') }}" class="small text-primary fw-semibold">
@@ -118,8 +118,9 @@
                   <span class="input-group-text"><i class="bx bx-lock-alt"></i></span>
                   <input type="password" id="password" class="form-control" name="password" placeholder="············"
                     required />
-                  <span class="input-group-text cursor-pointer" onclick="togglePasswordVisibility()"><i
-                      id="togglePassIcon" class="bx bx-hide"></i></span>
+                  <span class="input-group-text cursor-pointer" id="btnTogglePassword" role="button" aria-label="Tampilkan atau sembunyikan kata sandi">
+                    <i id="togglePassIcon" class="bx bx-hide"></i>
+                  </span>
                 </div>
               </div>
 
@@ -152,19 +153,26 @@
 
   @push('page-scripts')
     <script>
-      function togglePasswordVisibility() {
+      document.addEventListener('DOMContentLoaded', function () {
+        const btnToggle = document.getElementById('btnTogglePassword');
         const passInput = document.getElementById('password');
         const passIcon = document.getElementById('togglePassIcon');
-        if (passInput.type === 'password') {
-          passInput.type = 'text';
-          passIcon.classList.remove('bx-hide');
-          passIcon.classList.add('bx-show');
-        } else {
-          passInput.type = 'password';
-          passIcon.classList.remove('bx-show');
-          passIcon.classList.add('bx-hide');
+
+        if (btnToggle && passInput && passIcon) {
+          btnToggle.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (passInput.type === 'password') {
+              passInput.type = 'text';
+              passIcon.classList.remove('bx-hide');
+              passIcon.classList.add('bx-show');
+            } else {
+              passInput.type = 'password';
+              passIcon.classList.remove('bx-show');
+              passIcon.classList.add('bx-hide');
+            }
+          });
         }
-      }
+      });
 
       function fillCredentials(email, password) {
         const emailInput = document.getElementById('email');

@@ -91,7 +91,7 @@
                             </div>
                         </div>
 
-                        <div class="mb-3 form-password-toggle">
+                        <div class="mb-3">
                             <label class="form-label fw-semibold text-heading" for="password">Kata Sandi Baru</label>
                             <div class="input-group input-group-merge">
                                 <span class="input-group-text"><i class="bx bx-lock-alt"></i></span>
@@ -103,11 +103,13 @@
                                     placeholder="············" 
                                     required 
                                 />
-                                <span class="input-group-text cursor-pointer" onclick="togglePasswordVisibility('password', 'togglePassIcon')"><i id="togglePassIcon" class="bx bx-hide"></i></span>
+                                <span class="input-group-text cursor-pointer" id="btnToggleResetPass" role="button" aria-label="Tampilkan atau sembunyikan kata sandi baru">
+                                    <i id="togglePassIcon" class="bx bx-hide"></i>
+                                </span>
                             </div>
                         </div>
 
-                        <div class="mb-3 form-password-toggle">
+                        <div class="mb-3">
                             <label class="form-label fw-semibold text-heading" for="password_confirmation">Konfirmasi Sandi Baru</label>
                             <div class="input-group input-group-merge">
                                 <span class="input-group-text"><i class="bx bx-lock-alt"></i></span>
@@ -119,7 +121,9 @@
                                     placeholder="············" 
                                     required 
                                 />
-                                <span class="input-group-text cursor-pointer" onclick="togglePasswordVisibility('password_confirmation', 'toggleConfirmPassIcon')"><i id="toggleConfirmPassIcon" class="bx bx-hide"></i></span>
+                                <span class="input-group-text cursor-pointer" id="btnToggleResetConfirmPass" role="button" aria-label="Tampilkan atau sembunyikan konfirmasi kata sandi">
+                                    <i id="toggleConfirmPassIcon" class="bx bx-hide"></i>
+                                </span>
                             </div>
                         </div>
 
@@ -157,19 +161,31 @@
 
 @push('page-scripts')
 <script>
-    function togglePasswordVisibility(inputId, iconId) {
-        const passInput = document.getElementById(inputId);
-        const passIcon = document.getElementById(iconId);
-        if (passInput.type === 'password') {
-            passInput.type = 'text';
-            passIcon.classList.remove('bx-hide');
-            passIcon.classList.add('bx-show');
-        } else {
-            passInput.type = 'password';
-            passIcon.classList.remove('bx-show');
-            passIcon.classList.add('bx-hide');
+    function setupPasswordToggle(buttonId, inputId, iconId) {
+        const btn = document.getElementById(buttonId);
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+
+        if (btn && input && icon) {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('bx-hide');
+                    icon.classList.add('bx-show');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('bx-show');
+                    icon.classList.add('bx-hide');
+                }
+            });
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        setupPasswordToggle('btnToggleResetPass', 'password', 'togglePassIcon');
+        setupPasswordToggle('btnToggleResetConfirmPass', 'password_confirmation', 'toggleConfirmPassIcon');
+    });
 </script>
 @endpush
 @endsection

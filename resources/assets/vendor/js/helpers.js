@@ -725,21 +725,24 @@ const Helpers = {
   // ---
   // Init Password Toggle
   initPasswordToggle() {
-    const toggler = document.querySelectorAll('.form-password-toggle i')
+    const toggler = document.querySelectorAll('.form-password-toggle .cursor-pointer, .form-password-toggle .input-group-text:last-child')
     if (typeof toggler !== 'undefined' && toggler !== null) {
       toggler.forEach(el => {
         el.addEventListener('click', e => {
           e.preventDefault()
           const formPasswordToggle = el.closest('.form-password-toggle')
-          const formPasswordToggleIcon = formPasswordToggle.querySelector('i')
+          if (!formPasswordToggle) return
+          const formPasswordToggleIcon = el.querySelector('i') || formPasswordToggle.querySelector('i.bx-hide, i.bx-show') || formPasswordToggle.querySelector('i')
           const formPasswordToggleInput = formPasswordToggle.querySelector('input')
 
-          if (formPasswordToggleInput.getAttribute('type') === 'text') {
-            formPasswordToggleInput.setAttribute('type', 'password')
-            formPasswordToggleIcon.classList.replace('bx-show', 'bx-hide')
-          } else if (formPasswordToggleInput.getAttribute('type') === 'password') {
-            formPasswordToggleInput.setAttribute('type', 'text')
-            formPasswordToggleIcon.classList.replace('bx-hide', 'bx-show')
+          if (formPasswordToggleInput && formPasswordToggleIcon) {
+            if (formPasswordToggleInput.getAttribute('type') === 'text') {
+              formPasswordToggleInput.setAttribute('type', 'password')
+              formPasswordToggleIcon.classList.replace('bx-show', 'bx-hide')
+            } else if (formPasswordToggleInput.getAttribute('type') === 'password') {
+              formPasswordToggleInput.setAttribute('type', 'text')
+              formPasswordToggleIcon.classList.replace('bx-hide', 'bx-show')
+            }
           }
         })
       })

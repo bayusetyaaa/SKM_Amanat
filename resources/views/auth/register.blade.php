@@ -136,27 +136,28 @@
 
               <!-- Password & Konfirmasi -->
               <div class="row g-3 mb-4">
-                <div class="col-sm-6 form-password-toggle">
+                <div class="col-sm-6">
                   <label class="form-label fw-semibold text-heading" for="password">Kata Sandi <span
                       class="text-danger">*</span></label>
                   <div class="input-group input-group-merge">
                     <span class="input-group-text"><i class="bx bx-lock-alt"></i></span>
                     <input type="password" id="password" class="form-control" name="password"
                       placeholder="Min. 6 karakter" required />
-                    <span class="input-group-text cursor-pointer" onclick="togglePass('password', 'iconPass1')"><i
-                        id="iconPass1" class="bx bx-hide"></i></span>
+                    <span class="input-group-text cursor-pointer" id="btnTogglePass1" role="button" aria-label="Tampilkan atau sembunyikan kata sandi">
+                      <i id="iconPass1" class="bx bx-hide"></i>
+                    </span>
                   </div>
                 </div>
-                <div class="col-sm-6 form-password-toggle">
+                <div class="col-sm-6">
                   <label class="form-label fw-semibold text-heading" for="password_confirmation">Ulangi Sandi <span
                       class="text-danger">*</span></label>
                   <div class="input-group input-group-merge">
                     <span class="input-group-text"><i class="bx bx-check-shield"></i></span>
                     <input type="password" id="password_confirmation" class="form-control"
                       name="password_confirmation" placeholder="Ulangi kata sandi" required />
-                    <span class="input-group-text cursor-pointer"
-                      onclick="togglePass('password_confirmation', 'iconPass2')"><i id="iconPass2"
-                        class="bx bx-hide"></i></span>
+                    <span class="input-group-text cursor-pointer" id="btnTogglePass2" role="button" aria-label="Tampilkan atau sembunyikan konfirmasi kata sandi">
+                      <i id="iconPass2" class="bx bx-hide"></i>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -190,19 +191,31 @@
 
   @push('page-scripts')
     <script>
-      function togglePass(inputId, iconId) {
+      function setupPasswordToggle(buttonId, inputId, iconId) {
+        const btn = document.getElementById(buttonId);
         const input = document.getElementById(inputId);
         const icon = document.getElementById(iconId);
-        if (input.type === 'password') {
-          input.type = 'text';
-          icon.classList.remove('bx-hide');
-          icon.classList.add('bx-show');
-        } else {
-          input.type = 'password';
-          icon.classList.remove('bx-show');
-          icon.classList.add('bx-hide');
+
+        if (btn && input && icon) {
+          btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (input.type === 'password') {
+              input.type = 'text';
+              icon.classList.remove('bx-hide');
+              icon.classList.add('bx-show');
+            } else {
+              input.type = 'password';
+              icon.classList.remove('bx-show');
+              icon.classList.add('bx-hide');
+            }
+          });
         }
       }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        setupPasswordToggle('btnTogglePass1', 'password', 'iconPass1');
+        setupPasswordToggle('btnTogglePass2', 'password_confirmation', 'iconPass2');
+      });
     </script>
   @endpush
 @endsection
