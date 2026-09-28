@@ -27,8 +27,8 @@ class EvaluasiNilaiService
         // 1. K1 - Kepenulisan (Tugas Kepenulisan)
         if (isset($kriterias['K1'])) {
             $tugasK1Ids = $allPenugasans->filter(function ($p) {
-                return $p->hasIndikator('K1') || 
-                    stripos($p->judul, 'straight news') !== false || 
+                return $p->hasIndikator('K1') ||
+                    stripos($p->judul, 'straight news') !== false ||
                     stripos($p->judul, 'kepenulisan') !== false;
             })->pluck('id');
 
@@ -50,8 +50,8 @@ class EvaluasiNilaiService
         // 2. K2 - Kepekaan Isu (Tugas Analisis Isu)
         if (isset($kriterias['K2'])) {
             $tugasK2Ids = $allPenugasans->filter(function ($p) {
-                return $p->hasIndikator('K2') || 
-                    stripos($p->judul, 'analisis isu') !== false || 
+                return $p->hasIndikator('K2') ||
+                    stripos($p->judul, 'analisis isu') !== false ||
                     stripos($p->judul, 'isu') !== false;
             })->pluck('id');
 
@@ -73,10 +73,10 @@ class EvaluasiNilaiService
         // 3. K3 - Kreativitas (Tugas Kreatif)
         if (isset($kriterias['K3'])) {
             $tugasK3Ids = $allPenugasans->filter(function ($p) {
-                return $p->hasIndikator('K3') || 
-                    stripos($p->judul, 'desain') !== false || 
-                    stripos($p->judul, 'fotografi') !== false || 
-                    stripos($p->judul, 'kreatif') !== false || 
+                return $p->hasIndikator('K3') ||
+                    stripos($p->judul, 'desain') !== false ||
+                    stripos($p->judul, 'fotografi') !== false ||
+                    stripos($p->judul, 'kreatif') !== false ||
                     stripos($p->judul, 'visual') !== false;
             })->pluck('id');
 
@@ -143,4 +143,3 @@ class EvaluasiNilaiService
         }
     }
 }
-
