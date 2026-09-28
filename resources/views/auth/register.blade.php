@@ -143,7 +143,7 @@
                     <span class="input-group-text"><i class="bx bx-lock-alt"></i></span>
                     <input type="password" id="password" class="form-control" name="password"
                       placeholder="Min. 6 karakter" required />
-                    <span class="input-group-text cursor-pointer" id="btnTogglePass1" role="button" aria-label="Tampilkan atau sembunyikan kata sandi">
+                    <span class="input-group-text cursor-pointer" onclick="togglePasswordVisibility('password', this)" role="button" aria-label="Tampilkan atau sembunyikan kata sandi" style="user-select: none;">
                       <i id="iconPass1" class="bx bx-hide"></i>
                     </span>
                   </div>
@@ -155,7 +155,7 @@
                     <span class="input-group-text"><i class="bx bx-check-shield"></i></span>
                     <input type="password" id="password_confirmation" class="form-control"
                       name="password_confirmation" placeholder="Ulangi kata sandi" required />
-                    <span class="input-group-text cursor-pointer" id="btnTogglePass2" role="button" aria-label="Tampilkan atau sembunyikan konfirmasi kata sandi">
+                    <span class="input-group-text cursor-pointer" onclick="togglePasswordVisibility('password_confirmation', this)" role="button" aria-label="Tampilkan atau sembunyikan konfirmasi kata sandi" style="user-select: none;">
                       <i id="iconPass2" class="bx bx-hide"></i>
                     </span>
                   </div>

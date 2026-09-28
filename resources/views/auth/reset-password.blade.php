@@ -103,7 +103,7 @@
                                     placeholder="············" 
                                     required 
                                 />
-                                <span class="input-group-text cursor-pointer" id="btnToggleResetPass" role="button" aria-label="Tampilkan atau sembunyikan kata sandi baru">
+                                <span class="input-group-text cursor-pointer" onclick="togglePasswordVisibility('password', this)" role="button" aria-label="Tampilkan atau sembunyikan kata sandi baru" style="user-select: none;">
                                     <i id="togglePassIcon" class="bx bx-hide"></i>
                                 </span>
                             </div>
@@ -121,7 +121,7 @@
                                     placeholder="············" 
                                     required 
                                 />
-                                <span class="input-group-text cursor-pointer" id="btnToggleResetConfirmPass" role="button" aria-label="Tampilkan atau sembunyikan konfirmasi kata sandi">
+                                <span class="input-group-text cursor-pointer" onclick="togglePasswordVisibility('password_confirmation', this)" role="button" aria-label="Tampilkan atau sembunyikan konfirmasi kata sandi" style="user-select: none;">
                                     <i id="toggleConfirmPassIcon" class="bx bx-hide"></i>
                                 </span>
                             </div>

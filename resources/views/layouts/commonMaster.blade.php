@@ -73,6 +73,32 @@
     @stack('scripts')
 
     @vite(['resources/js/app.js'])
+
+    <script>
+        window.togglePasswordVisibility = function (inputId, btnEl) {
+            var input = document.getElementById(inputId);
+            if (!input) return;
+
+            var icon = btnEl ? (btnEl.tagName && btnEl.tagName.toLowerCase() === 'i' ? btnEl : btnEl.querySelector('i')) : null;
+            if (!icon) {
+                icon = document.querySelector('[onclick*="' + inputId + '"] i') || document.getElementById('togglePassIcon');
+            }
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                if (icon) {
+                    icon.classList.remove('bx-hide');
+                    icon.classList.add('bx-show');
+                }
+            } else {
+                input.type = 'password';
+                if (icon) {
+                    icon.classList.remove('bx-show');
+                    icon.classList.add('bx-hide');
+                }
+            }
+        };
+    </script>
 </body>
 
 </html>
