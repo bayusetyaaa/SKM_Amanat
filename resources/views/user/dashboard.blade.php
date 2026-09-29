@@ -122,7 +122,7 @@
     <div class="col-md-4">
         <div class="card shadow-sm h-100">
             <div class="card-body">
-                <div class="d-flex align-items-start justify-content-between mb-2">
+                <div class="d-flex align-items-start justify-content-between mb-2 color=ffff">
                     <span class="text-heading text-uppercase fs-tiny fw-medium">Rekomendasi Divisi</span>
                     <div class="avatar avatar-sm">
                         <span class="avatar-initial rounded {{ $userStatus === 'lolos' ? 'bg-label-success' : 'bg-label-secondary' }}">
